@@ -1,0 +1,198 @@
+#
+# Copyright (c) 2013 Citrix Systems, Inc.
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+
+# <summary>Network Driver Domain</summary>
+
+########################################
+## <summary>
+##	Allow the specified domain to
+##	add NDVM resources.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowe access.
+##	</summary>
+## </param>
+#
+interface(`ndvm_add_resource',`
+	gen_require(`
+		type ndvm_t;
+	')
+
+	allow $1 ndvm_t:resource add;
+')
+########################################
+## <summary>
+##	Allow the specified domain to
+##	remove NDVM resources.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowe access.
+##	</summary>
+## </param>
+#
+interface(`ndvm_remove_resource',`
+	gen_require(`
+		type ndvm_t;
+	')
+
+	allow $1 ndvm_t:resource remove;
+')
+########################################
+## <summary>
+##	Allow the specified domain to
+##	manage NDVM resources.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowe access.
+##	</summary>
+## </param>
+#
+interface(`ndvm_manage_resource',`
+	gen_require(`
+		type ndvm_t;
+	')
+
+	allow $1 ndvm_t:resource { add remove };
+')
+########################################
+## <summary>
+##	Allow the specified domain to
+##	send data to the NDVM via v4v.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowe access.
+##	</summary>
+## </param>
+#
+interface(`ndvm_send_v4v',`
+	gen_require(`
+		type ndvm_t;
+	')
+
+	allow $1 ndvm_t:v4v send;
+')
+########################################
+## <summary>
+##	Allow the specified domain to
+##	create a private event type
+##	for use with ndvm.
+## </summary>
+## <param name="dst_type">
+##	<summary>
+##	Type of the destination domain.
+##	</summary>
+## </param>
+## <param name="event_type">
+##	<summary>
+##	Type of the event ndvm will create.
+##	</summary>
+## </param>
+#
+interface(`ndvm_event_dst',`
+	gen_require(`
+		type ndvm_t;
+	')
+
+	create_channel($1, ndvm_t, $2)
+
+	allow $1 $2:event send;
+    allow ndvm_t $2:event create;
+')
+########################################
+## <summary>
+##	Allow ndvm to create an event type
+##	through a transition destined for
+##	the parameter domain.
+## </summary>
+## <param name="dst_type">
+##	<summary>
+##	Type of the destination domain.
+##	</summary>
+## </param>
+## <param name="event_type">
+##	<summary>
+##	Type of the event ndvm will create.
+##	</summary>
+## </param>
+#
+interface(`ndvm_event_src',`
+	gen_require(`
+		type ndvm_t;
+	')
+
+	create_channel(ndvm_t, $1, $2)
+
+	allow ndvm_t $2:event { status send };
+')
+########################################
+## <summary>
+##	Allow specified domain to use networking from
+##	ndvm.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`ndvm_use',`
+	gen_require(`
+		type ndvm_t;
+	')
+
+	allow ndvm_t $1:grant { map_read unmap copy };
+	allow ndvm_t $1:resource remove;
+')
+########################################
+## <summary>
+##	Allow the specified type to map write ndvm grants.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`ndvm_map_write_grant',`
+	gen_require(`
+		type ndvm_t;
+	')
+
+	allow $1 ndvm_t:grant map_write;
+')
+########################################
+## <summary>
+##	Allow the specified type to copy ndvm grants.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`ndvm_copy_grant',`
+	gen_require(`
+		type ndvm_t;
+	')
+
+	allow $1 ndvm_t:grant copy;
+')

@@ -1,0 +1,672 @@
+#
+# Copyright (c) 2013 Citrix Systems, Inc.
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+
+# <summary>Xen XSM module</summary>
+
+########################################
+## <summary>
+##	Make the specified type usable
+##      as a domain managed by dom0.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain.
+##	</summary>
+## </param>
+#
+interface(`xen_domain_type',`
+	gen_require(`
+		attribute domain_type, dom0_type;
+		type dom0_type, domio_t;
+	')
+
+	typeattribute $1 domain_type;
+
+	allow dom0_type $1:domain {create destroy max_vcpus setdomainmaxmem 
+				setaddrsize getdomaininfo hypercall 
+				setvcpucontext getscheduler pause unpause 
+				getvcpuinfo getvcpuextstate getaddrsize getaffinity settime
+				setdomainhandle shutdown set_misc_info };
+	allow dom0_type $1:domain2 {setcorespersocket setscheduler set_xcisrv set_cpuid set_as_target iommu_x_mapping iommu_map_batch aperture_map };
+			
+	allow dom0_type $1:shadow {enable};
+	allow dom0_type $1:mmu {map_read map_write memorymap adjust pinpage physmap mmuext_op};
+	allow dom0_type $1:resource { add remove };
+	allow $1 $1:mmu {map_read map_write adjust pinpage};
+	allow $1 domio_t:mmu {map_read};
+	allow $1 $1:grant {query setup};
+	allow dom0_type $1:grant { copy map_read unmap query setup };
+')
+########################################
+## <summary>
+##	Allow the specified type to use
+##	ioport resources.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`ioport_use_resource',`
+	gen_require(`
+		type ioport_t;
+	')
+
+	allow $1 ioport_t:resource use;
+')
+########################################
+## <summary>
+##	Allow the specified type to add_ioport
+##	ioport resources.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`ioport_add_resource',`
+	gen_require(`
+		type ioport_t;
+	')
+
+	allow $1 ioport_t:resource add_ioport;
+')
+########################################
+## <summary>
+##	Allow the specified type to remove_ioport
+##	ioport resources.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`ioport_remove_resource',`
+	gen_require(`
+		type ioport_t;
+	')
+
+	allow $1 ioport_t:resource remove_ioport;
+')
+########################################
+## <summary>
+##	Allow the specified type to use
+##	pirq resources.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`pirq_use_resource',`
+	gen_require(`
+		type pirq_t;
+	')
+
+	allow $1 pirq_t:resource use;
+')
+########################################
+## <summary>
+##	Allow the specified type to add_irq to
+##	pirq resources.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`pirq_add_resource',`
+	gen_require(`
+		type pirq_t;
+	')
+
+	allow $1 pirq_t:resource add_irq;
+')
+########################################
+## <summary>
+##	Allow the specified type to remove_irq to
+##	pirq resources.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`pirq_remove_resource',`
+	gen_require(`
+		type pirq_t;
+	')
+
+	allow $1 pirq_t:resource remove_irq;
+')
+########################################
+## <summary>
+##	Allow the specified type to manage to
+##	pirq resources.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`pirq_manage_resource',`
+	gen_require(`
+		type pirq_t;
+	')
+
+	pirq_add_resource($1)
+	pirq_remove_resource($1)
+	pirq_use_resource($1)
+')
+########################################
+## <summary>
+##	Allow the specified type to bind_irq to
+##	pirq hvm.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`pirq_bind_hvm',`
+	gen_require(`
+		type pirq_t;
+	')
+
+	allow $1 pirq_t:hvm bind_irq;
+')
+########################################
+## <summary>
+##	Allow the specified type to vector pirq_t
+##  events.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+#interface(`pirq_vector_event',`
+#	gen_require(`
+#		type pirq_t;
+#	')
+#
+#	allow $1 pirq_t:event vector;
+#')
+########################################
+## <summary>
+##	Allow the specified type to
+##	map_write domio mmus.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`domio_map_write_mmu',`
+	gen_require(`
+		type domio_t;
+	')
+
+	allow $1 domio_t:mmu map_write;
+')
+########################################
+## <summary>
+##	Allow the specified type to
+##	map read/write domio mmus
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`domio_map_rw_mmu',`
+	gen_require(`
+		type domio_t;
+	')
+
+	allow $1 domio_t:mmu { map_read map_write };
+')
+########################################
+## <summary>
+##	Allow the specified type to
+##	use domio resources.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`domio_use_resource',`
+	gen_require(`
+		type domio_t;
+	')
+
+	allow $1 domio_t:resource use;
+')
+########################################
+## <summary>
+##	Allow the specified type to
+##	use iomem resources.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`iomem_use_resource',`
+	gen_require(`
+		type iomem_t;
+	')
+
+	allow $1 iomem_t:resource use;
+')
+########################################
+## <summary>
+##	Allow the specified type to
+##	use device resources.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`device_use_resource',`
+	gen_require(`
+		type device_t;
+	')
+
+	allow $1 device_t:resource use;
+')
+########################################
+## <summary>
+##	Allow the specified type to
+##	map_read the iomem mmu.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`iomem_map_read_mmu',`
+	gen_require(`
+		type iomem_t;
+	')
+
+	allow $1 iomem_t:mmu map_read;
+')
+########################################
+## <summary>
+##	Allow the specified type to
+##	map_write the iomem mmu.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`iomem_map_write_mmu',`
+	gen_require(`
+		type iomem_t;
+	')
+
+	allow $1 iomem_t:mmu map_write;
+')
+########################################
+## <summary>
+##	Allow the specified type to
+##	map_read and write the iomem mmu.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`iomem_map_rw_mmu',`
+	gen_require(`
+		type iomem_t;
+	')
+
+	iomem_map_read_mmu($1)
+	iomem_map_write_mmu($1)
+')
+########################################
+## <summary>
+##	Allow the specified type to
+##	add_iomem iomem resource.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`iomem_add_resource',`
+	gen_require(`
+		type iomem_t;
+	')
+
+	allow $1 iomem_t:resource add_iomem;
+')
+########################################
+## <summary>
+##	Allow the specified type to
+##	remove_iomem iomem resource.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`iomem_remove_resource',`
+	gen_require(`
+		type iomem_t;
+	')
+
+	allow $1 iomem_t:resource remove_iomem;
+')
+########################################
+## <summary>
+##	Make the specified type usable
+##	as an HVM guest.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`xen_hvm_type',`
+	gen_require(`
+                attribute hvm_type;
+	')
+
+	typeattribute $1 hvm_type;
+')
+########################################
+## <summary>
+##	Allow the specified type to read the xen console.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`xen_read_console',`
+	gen_require(`
+		type xen_t;
+	')
+
+	allow $1 xen_t:xen readconsole;
+')
+########################################
+## <summary>
+##	Allow the specified type to write to the xen console.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`xen_write_console',`
+	gen_require(`
+		type xen_t;
+	')
+
+	allow $1 xen_t:xen writeconsole;
+')
+########################################
+## <summary>
+##	Allow the specified type r/w access to the xen console.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`xen_rw_console',`
+	gen_require(`
+		type xen_t;
+	')
+
+	xen_read_console($1)
+	xen_write_console($1)
+')
+########################################
+## <summary>
+##	Allow dom0 to pass through PCI devices
+##	to the specified guest.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`dom0_pt_guest',`
+	gen_require(`
+		type pirq_t, device_t, iomem_t, ioport_t;
+	')
+
+	allow $1 pirq_t:resource use;
+	allow $1 device_t:resource use;
+	allow $1 iomem_t:resource use;
+	allow $1 ioport_t:resource use;
+')
+########################################
+## <summary>
+##	Make the specified type usable as dom0.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain.
+##	</summary>
+## </param>
+#
+interface(`xen_dom0_type',`
+	gen_require(`
+		attribute dom0_type;
+	')
+
+	typeattribute $1 dom0_type, domain_type;
+')
+
+########################################
+## <summary>
+##	Allow a device to be used by a domain
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain.
+##	</summary>
+## </param>
+## <param name="type">
+##	<summary>
+##	Type of the device.
+##	</summary>
+## </param>
+#   
+interface(`use_device',`
+	gen_require(`
+		type domio_t;
+	')
+
+	allow $1 $2:resource use;
+	allow $1 domio_t:mmu { map_read map_write };
+')
+########################################
+## <summary>
+##	Allow a domain to use the iomem device
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain.
+##	</summary>
+## </param>
+#
+interface(`iomem_use_device',`
+	gen_require(`
+		type iomem_t;
+	')
+
+	use_device($1, iomem_t)
+')
+########################################
+## <summary>
+##	Allow a domain to admin a device.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain.
+##	</summary>
+## </param>
+## <param name="type">
+##	<summary>
+##	Type of the device.
+##	</summary>
+## </param>
+#
+interface(`admin_device',`
+	allow $1 $2:resource { stat_device add_device add_irq add_iomem add_ioport remove_device remove_irq remove_iomem remove_ioport plug unplug setup };
+	allow $1 $2:hvm bind_irq;
+	use_device($1, $2)
+')
+########################################
+## <summary>
+##	Allow a domain to admin the pirq device.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain.
+##	</summary>
+## </param>
+#
+interface(`pirq_admin_device',`
+	gen_require(`
+		type pirq_t; 
+	')
+
+	admin_device($1, pirq_t)
+')
+########################################
+## <summary>
+##	Allow a domain to admin the iomem device.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain.
+##	</summary>
+## </param>
+#
+interface(`iomem_admin_device',`
+	gen_require(`
+		type iomem_t; 
+	')
+
+	admin_device($1, iomem_t)
+')
+########################################
+## <summary>
+##	Allow a domain to admin the ioport device.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain.
+##	</summary>
+## </param>
+#
+interface(`ioport_admin_device',`
+	gen_require(`
+		type ioport_t;
+	')
+
+	admin_device($1, ioport_t)
+')
+########################################
+## <summary>
+##	Allow a domain to admin the device device.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain.
+##	</summary>
+## </param>
+#
+interface(`device_admin_device',`
+	gen_require(`
+		type device_t;
+	')
+
+	admin_device($1, device_t)
+')
+########################################
+## <summary>
+##	Allow a domain to convert ssid values to strings.
+##  xl list -Z and the like
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain.
+##	</summary>
+## </param>
+#
+interface(`security_ssid_convert',`
+	gen_require(`
+		require security_t;
+	')
+
+	allow $1 security_t:security check_context;
+')
+########################################
+## <summary>
+##	Make the specified type usable
+##	as an event.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of to be used for the event.
+##	</summary>
+## </param>
+#
+interface(`xen_event_type',`
+	gen_require(`
+		attribute event_type;
+	')
+
+	typeattribute $1 event_type;
+')

@@ -1,0 +1,128 @@
+#
+# Copyright (c) 2014 Citrix Systems, Inc.
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+
+# <summary>What does NILF stand for again?</summary>
+
+########################################
+## <summary>
+##	Allow the specified domain to
+##	create a private event type
+##	for use with nilfvm.
+## </summary>
+## <param name="dst_type">
+##	<summary>
+##	Type of the destination domain.
+##	</summary>
+## </param>
+## <param name="event_type">
+##	<summary>
+##	Type of the event nilfvm will create.
+##	</summary>
+## </param>
+#
+interface(`nilfvm_event_dst',`
+	gen_require(`
+		type nilfvm_t;
+	')
+
+	create_channel($1, nilfvm_t, $2)
+
+	allow $1 $2:event send;
+	allow nilfvm_t $2:event create;
+')
+########################################
+## <summary>
+##	Allow nilfvm to create an event type
+##	through a transition destined for
+##	the parameter domain.
+## </summary>
+## <param name="dst_type">
+##	<summary>
+##	Type of the destination domain.
+##	</summary>
+## </param>
+## <param name="event_type">
+##	<summary>
+##	Type of the event nilfvm will create.
+##	</summary>
+## </param>
+#
+interface(`nilfvm_event_src',`
+	gen_require(`
+		type nilfvm_t;
+	')
+
+	create_channel(nilfvm_t, $1, $2)
+
+	allow nilfvm_t $2:event { status send };
+')
+########################################
+## <summary>
+##	Allow the nilfvm to use grants from the specified
+##	domain.  This ammounts to allowing a netfront driver
+##	to use a netback from the nilfvm.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`nilfvm_use',`
+	gen_require(`
+		type nilfvm_t;
+	')
+
+	allow nilfvm_t $1:grant { copy map_read unmap };
+')
+
+########################################
+## <summary>
+##	Allow the specified type to map write nilfvm grants.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`nilfvm_map_write_grant',`
+	gen_require(`
+	type nilfvm_t;
+	')
+
+	allow $1 nilfvm_t:grant map_write;
+')
+
+########################################
+## <summary>
+##	Allow the specified type to copy nilfvm grants.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`nilfvm_copy_grant',`
+	gen_require(`
+		type nilfvm_t;
+	')
+
+	allow $1 nilfvm_t:grant copy;
+')

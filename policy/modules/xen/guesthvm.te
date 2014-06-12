@@ -1,0 +1,85 @@
+#
+# Copyright (c) 2014 Citrix Systems, Inc.
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+
+policy_module(guesthvm, 0.2)
+
+########################################
+#
+# Declarations
+#
+
+type hvm_guest_t;
+xen_domain_type(hvm_guest_t)
+xen_hvm_type(hvm_guest_t)
+
+#types for event channel between hvm_guest and dom0
+type hvm_guest-dom0_evchn_t;
+xen_event_type(hvm_guest-dom0_evchn_t)
+dom0_event_dst(hvm_guest_t, hvm_guest-dom0_evchn_t)
+
+type dom0-hvm_guest_evchn_t;
+xen_event_type(dom0-hvm_guest_evchn_t)
+dom0_event_src(hvm_guest_t, dom0-hvm_guest_evchn_t)
+
+#types for event channel between hvm_guest and ndvm
+type hvm_guest-ndvm_evchn_t;
+xen_event_type(hvm_guest-ndvm_evchn_t)
+ndvm_event_dst(hvm_guest_t, hvm_guest-ndvm_evchn_t)
+
+type ndvm-hvm_guest_evchn_t;
+xen_event_type(ndvm-hvm_guest_evchn_t)
+ndvm_event_src(hvm_guest_t, ndvm-hvm_guest_evchn_t)
+
+ndvm_copy_grant(hvm_guest_t)
+nilfvm_copy_grant(hvm_guest_t)
+
+#types for event channel between hvm_guest and stubdom
+type hvm_guest-stubdom_evchn_t;
+xen_event_type(hvm_guest-stubdom_evchn_t)
+stubdom_event_dst(hvm_guest_t, hvm_guest-stubdom_evchn_t)
+
+type stubdom-hvm_guest_evchn_t;
+xen_event_type(stubdom-hvm_guest_evchn_t)
+stubdom_event_src(hvm_guest_t, stubdom-hvm_guest_evchn_t)
+
+# types for event channel between hvm_guest and nilfvm
+type hvm_guest-nilfvm_evchn_t;
+xen_event_type(hvm_guest-nilfvm_evchn_t)
+nilfvm_event_dst(hvm_guest_t, hvm_guest-nilfvm_evchn_t)
+
+type nilfvm-hvm_guest_evchn_t;
+xen_event_type(nilfvm-hvm_guest_evchn_t)
+nilfvm_event_src(hvm_guest_t, nilfvm-hvm_guest_evchn_t)
+
+########################################
+#
+# HVM Guest Local policy
+#
+
+allow hvm_guest_t self:mmu physmap;
+allow hvm_guest_t self:grant copy;
+allow hvm_guest_t self:resource remove;
+
+ndvm_use(hvm_guest_t)
+nilfvm_use(hvm_guest_t)
+dom0_copy_grant(hvm_guest_t)
+dom0_map_write_grant_guest(hvm_guest_t)
+dom0_pt_guest(hvm_guest_t)
+dom0_send_v4v(hvm_guest_t)
+dom0_recv_v4v(hvm_guest_t)
+stubdom_ioemu(hvm_guest_t)

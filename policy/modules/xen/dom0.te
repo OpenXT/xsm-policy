@@ -1,0 +1,84 @@
+#
+# Copyright (c) 2014 Citrix Systems, Inc.
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+
+policy_module(dom0, 0.2)
+
+########################################
+#
+# Declarations
+#
+
+type dom0_t;
+xen_dom0_type(dom0_t)
+
+sid dom0 gen_context(system_u:system_r:dom0_t,s0)
+
+type evchn0-0_t;
+xen_event_type(evchn0-0_t)
+create_channel(dom0_t, dom0_t, evchn0-0_t)
+
+########################################
+#
+# Local Policy
+#
+
+allow dom0_t self:mmu { pinpage map_read map_write adjust updatemp stat exchange mmuext_op };
+allow dom0_t self:grant { query setup };
+allow dom0_t self:domain { getscheduler getdomaininfo getvcpuinfo
+                           getaffinity };
+allow dom0_t self:domain2 { setscheduler iommu_map_batch iommu_x_mapping aperture_map };
+
+allow dom0_t self:event { bind create };
+allow dom0_t self:resource { add remove setup };
+allow dom0_t self:v4v send;
+
+allow dom0_t evchn0-0_t:event send;
+
+allow dom0_t iomem_t:resource setup;
+allow dom0_t stubdom_t:domain2 make_priv_for;
+
+domio_map_rw_mmu(dom0_t)
+
+# dom0 access to service VMs
+ndvm_manage_resource(dom0_t)
+ndvm_send_v4v(dom0_t)
+ndvm_use(dom0_t)
+ndvm_map_write_grant(dom0_t)
+
+uivm_send_v4v(dom0_t)
+uivm_map_write_grant(dom0_t)
+
+syncvm_map_write_grant(dom0_t)
+
+icavm_map_write_grant(dom0_t)
+
+nilfvm_map_write_grant(dom0_t)
+
+stubdom_copy_grant(dom0_t)
+stubdom_send_v4v(dom0_t)
+stubdom_map_write_grant(dom0_t)
+
+# access to hardware & xen
+device_admin_device(dom0_t)
+iomem_map_rw_mmu(dom0_t)
+iomem_admin_device(dom0_t)
+ioport_admin_device(dom0_t)
+pirq_admin_device(dom0_t)
+#pirq_vector_event(dom0_t)
+security_ssid_convert(dom0_t)
+xen_rw_console(dom0_t)

@@ -1,0 +1,55 @@
+#
+# Copyright (c) 2013 Citrix Systems, Inc.
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+
+policy_module(syncvm, 0.2)
+
+########################################
+#
+# Declarations
+#
+
+type syncvm_t;
+xen_domain_type(syncvm_t)
+xen_pv_type(syncvm_t)
+
+type syncvm-dom0_evchn_t;
+xen_event_type(syncvm-dom0_evchn_t)
+dom0_event_dst(syncvm_t, syncvm-dom0_evchn_t)
+
+type dom0-syncvm_evchn_t;
+xen_event_type(dom0-syncvm_evchn_t)
+dom0_event_src(syncvm_t, dom0-syncvm_evchn_t)
+
+type syncvm-ndvm_evchn_t;
+xen_event_type(syncvm-ndvm_evchn_t)
+ndvm_event_dst(syncvm_t, syncvm-ndvm_evchn_t)
+
+type ndvm-syncvm_evchn_t;
+xen_event_type(ndvm-syncvm_evchn_t)
+ndvm_event_src(syncvm_t, ndvm-syncvm_evchn_t)
+
+########################################
+#
+# Sync VM local policy
+#
+
+ndvm_use(syncvm_t)
+ndvm_copy_grant(syncvm_t)
+dom0_recv_v4v(syncvm_t)
+dom0_send_v4v(syncvm_t)
+xen_write_console(syncvm_t)

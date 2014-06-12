@@ -1,0 +1,97 @@
+#
+# Copyright (c) 2013 Citrix Systems, Inc.
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+
+policy_module(xen, 0.3)
+
+########################################
+#
+# attributes, roles, sids and types
+#
+attribute xen_type;
+attribute domain_type;
+attribute resource_type;
+attribute event_type;
+attribute hvm_type;
+attribute dom0_type;
+
+type xen_t, xen_type;
+type domio_t, domain_type;
+type domU_t, domain_type;
+type domxen_t, domain_type;
+type unlabeled_t, domain_type;
+type security_t, domain_type;
+type pirq_t, resource_type;
+type ioport_t, resource_type;
+type iomem_t, resource_type;
+type device_t, resource_type;
+
+sid xen gen_context(system_u:system_r:xen_t,s0)
+sid domxen gen_context(system_u:system_r:domxen_t,s0)
+sid domio gen_context(system_u:system_r:domio_t,s0)
+sid unlabeled gen_context(system_u:system_r:unlabeled_t,s0)
+sid security gen_context(system_u:system_r:security_t,s0)
+sid irq gen_context(system_u:object_r:pirq_t,s0)
+sid iomem gen_context(system_u:object_r:iomem_t,s0)
+sid ioport gen_context(system_u:object_r:ioport_t,s0)
+sid device gen_context(system_u:object_r:device_t,s0)
+
+role system_r;
+role user_r;
+role sysadm_r;
+role staff_r;
+
+role system_r types { xen_type domain_type };
+role user_r types { xen_type domain_type };
+role sysadm_r types { xen_type domain_type };
+role staff_r types { xen_type domain_type };
+
+########################################
+#
+# Xen
+#
+allow xen_t ioport_t:resource { add_ioport remove_ioport };
+allow xen_t iomem_t:resource { add_iomem remove_iomem };
+allow xen_t pirq_t:resource { add_irq remove_irq };
+allow xen_t { ndvm_t hvm_guest_t stubdom_t }:resource remove;
+
+syncvm_remove_resource(xen_t)
+
+########################################
+#
+# dom0
+#
+
+# xen access to dom0
+allow xen_t dom0_type:domain create;
+allow xen_t dom0_type:resource { add remove };
+
+# dom0 access to xen
+allow dom0_type xen_t:mmu { memorymap };
+allow dom0_type xen_t:xen { kexec readapic writeapic mtrr_read mtrr_add mtrr_del 
+                         getscheduler setscheduler physinfo heap quirk
+                         settime microcode firmware sleep getcpuinfo pm_op };
+
+# dom0 access to hvm guests
+allow dom0_type hvm_type:hvm { cacheattr getparam irqlevel pcilevel pciroute
+                               nested setparam hvmctl trackdirtyvram };
+
+########################################
+#
+#  HVM attribute
+#
+allow hvm_type self:hvm { getparam setparam };

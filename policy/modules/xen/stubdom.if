@@ -1,0 +1,150 @@
+#
+# Copyright (c) 2013 Citrix Systems, Inc.
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+
+# <summary>Dedicated VM for to hosting IOEMUs</summary>
+
+########################################
+## <summary>
+##	Allow the specified domain to
+##	create a private event type
+##	for use with stubdom.
+## </summary>
+## <param name="dst_type">
+##	<summary>
+##	Type of the destination domain.
+##	</summary>
+## </param>
+## <param name="event_type">
+##	<summary>
+##	Type of the event stubdom will create.
+##	</summary>
+## </param>
+#
+interface(`stubdom_event_dst',`
+	gen_require(`
+		type stubdom_t;
+	')
+
+	create_channel($1, stubdom_t, $2)
+
+	allow $1 $2:event send;
+    allow stubdom_t $2:event create;
+')
+########################################
+## <summary>
+##	Allow stubdom to create an event type
+##	through a transition destined for
+##	the parameter domain.
+## </summary>
+## <param name="dst_type">
+##	<summary>
+##	Type of the destination domain.
+##	</summary>
+## </param>
+## <param name="event_type">
+##	<summary>
+##	Type of the event stubdom will create.
+##	</summary>
+## </param>
+#
+interface(`stubdom_event_src',`
+	gen_require(`
+		type stubdom_t;
+	')
+
+	create_channel(stubdom_t, $1, $2)
+
+	allow stubdom_t $2:event { status send };
+')
+########################################
+## <summary>
+##	Allow a type to use a stubdom to host it's IOEMU.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain using stubdom.
+##	</summary>
+## </param>
+#
+interface(`stubdom_ioemu',`
+	gen_require(`
+		type stubdom_t;
+	')
+
+	allow stubdom_t $1:resource { add remove };
+	allow stubdom_t $1:domain { set_target shutdown settime };
+	allow stubdom_t $1:hvm { cacheattr getparam irqlevel pcilevel pciroute
+				 setparam trackdirtyvram hvmctl };
+	allow stubdom_t $1:mmu { adjust physmap map_read map_write };
+	allow stubdom_t $1:grant copy;
+	allow $1 stubdom_t:grant { copy };
+	allow $1 stubdom_t:resource remove;
+')
+########################################
+## <summary>
+##	Allow the specified domain to copy grants from the
+##	stubdom.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`stubdom_copy_grant',`
+	gen_require(`
+		type stubdom_t;
+	')
+
+	allow $1 stubdom_t:grant copy;
+')
+########################################
+## <summary>
+##	Allow the specified type to send
+##	data via v4v to stubdom
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`stubdom_send_v4v',`
+	gen_require(`
+		type stubdom_t;
+	')
+
+	allow $1 stubdom_t:v4v send;
+')
+########################################
+## <summary>
+##	Allow the specified type to map write stubdomain grants.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`stubdom_map_write_grant',`
+	gen_require(`
+		type stubdom_t;
+	')
+
+	allow $1 stubdom_t:grant map_write;
+')

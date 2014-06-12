@@ -1,0 +1,59 @@
+#
+# Copyright (c) 2014 Citrix Systems, Inc.
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+
+policy_module(nilfvm, 0.2)
+
+########################################
+#
+# Declarations
+#
+
+type nilfvm_t;
+xen_domain_type(nilfvm_t)
+xen_pv_type(nilfvm_t)
+
+type nilfvm-dom0_evchn_t;
+xen_event_type(nilfvm-dom0_evchn_t)
+dom0_event_dst(nilfvm_t, nilfvm-dom0_evchn_t)
+
+type dom0-nilfvm_evchn_t;
+xen_event_type(dom0-nilfvm_evchn_t)
+dom0_event_src(nilfvm_t, dom0-nilfvm_evchn_t)
+
+#types for event channel between nilfvm and ndvm
+type nilfvm-ndvm_evchn_t;
+xen_event_type(nilfvm-ndvm_evchn_t)
+ndvm_event_dst(nilfvm_t, nilfvm-ndvm_evchn_t)
+
+type ndvm-nilfvm_evchn_t;
+xen_event_type(ndvm-nilfvm_evchn_t)
+ndvm_event_src(nilfvm_t, ndvm-nilfvm_evchn_t)
+
+########################################
+#
+# NDVM local policy
+#
+
+dom0_copy_grant(nilfvm_t)
+dom0_recv_v4v(nilfvm_t)
+dom0_send_v4v(nilfvm_t)
+ndvm_use(nilfvm_t)
+ndvm_copy_grant(nilfvm_t)
+stubdom_map_write_grant(nilfvm_t)
+hvm_guest_map_write_grant(nilfvm_t)
+xen_write_console(nilfvm_t)
