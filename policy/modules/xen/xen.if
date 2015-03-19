@@ -200,6 +200,60 @@ interface(`pirq_bind_hvm',`
 ')
 ########################################
 ## <summary>
+##	Allow the specified type to add_irq to
+##	device resources.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`device_add_resource',`
+	gen_require(`
+		type device_t;
+	')
+
+	allow $1 device_t:resource add_irq;
+')
+########################################
+## <summary>
+##	Allow the specified type to remove_irq to
+##	device resources.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`device_remove_resource',`
+	gen_require(`
+		type device_t;
+	')
+
+	allow $1 device_t:resource remove_irq;
+')
+########################################
+## <summary>
+##	Allow the specified type to bind_irq to
+##	device hvm.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`device_bind_hvm',`
+	gen_require(`
+		type device_t;
+	')
+
+	allow $1 device_t:hvm bind_irq;
+')
+########################################
+## <summary>
 ##	Allow the specified type to vector pirq_t
 ##  events.
 ## </summary>
