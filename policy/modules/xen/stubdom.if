@@ -89,7 +89,7 @@ interface(`stubdom_ioemu',`
 	allow stubdom_t $1:resource { add remove };
 	allow stubdom_t $1:domain { set_target shutdown settime };
 	allow stubdom_t $1:hvm { cacheattr getparam irqlevel pcilevel pciroute
-				 setparam trackdirtyvram hvmctl };
+				 setparam trackdirtyvram hvmctl send_irq };
 	allow stubdom_t $1:mmu { adjust physmap map_read map_write };
 	allow stubdom_t $1:grant copy;
 	allow $1 stubdom_t:grant { copy };
