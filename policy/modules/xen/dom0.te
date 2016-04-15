@@ -52,6 +52,8 @@ allow dom0_t evchn0-0_t:event send;
 allow dom0_t iomem_t:resource setup;
 allow dom0_t stubdom_t:domain2 make_priv_for;
 
+allow dom0_t xen_t:resource setup;
+
 domio_map_rw_mmu(dom0_t)
 
 # dom0 access to service VMs
