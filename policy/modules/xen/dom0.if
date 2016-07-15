@@ -104,6 +104,7 @@ interface(`dom0_send_v4v',`
 		type dom0_t;
 	')
 
+	allow $1 self:v4v use;
 	allow $1 dom0_t:v4v send;
 ')
 ########################################
@@ -122,6 +123,7 @@ interface(`dom0_recv_v4v',`
 		type dom0_t;
 	')
 
+	allow dom0_t self:v4v use;
 	allow dom0_t $1:v4v send;
 ')
 ########################################
