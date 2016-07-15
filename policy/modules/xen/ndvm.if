@@ -88,6 +88,7 @@ interface(`ndvm_send_v4v',`
 		type ndvm_t;
 	')
 
+	allow $1 self:v4v use;
 	allow $1 ndvm_t:v4v send;
 ')
 ########################################
