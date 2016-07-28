@@ -34,26 +34,10 @@ interface(`uivm_send_v4v',`
 		type uivm_t;
 	')
 
+	allow $1 self:v4v use;
 	allow $1 uivm_t:v4v send;
 ')
-########################################
-## <summary>
-##	Allow the specified domain to
-##	send data to the UIVM via v4v.
-## </summary>
-## <param name="type">
-##	<summary>
-##	Type of the domain allowe access.
-##	</summary>
-## </param>
-#
-interface(`uivm_send_v4v',`
-	gen_require(`
-		type uivm_t;
-	')
 
-	allow $1 uivm_t:v4v send;
-')
 ########################################
 ## <summary>
 ##	Allow the specified type to map write uivm grants.
