@@ -42,7 +42,7 @@ interface(`xen_domain_type',`
 				setvcpucontext getscheduler pause unpause 
 				getvcpuinfo getvcpuextstate getaddrsize getaffinity settime
 				setdomainhandle shutdown set_misc_info };
-	allow dom0_type $1:domain2 {setcorespersocket setscheduler set_xcisrv set_cpuid set_as_target iommu_x_mapping iommu_map_batch aperture_map };
+	allow dom0_type $1:domain2 {setcorespersocket setscheduler set_cpuid set_as_target };
 			
 	allow dom0_type $1:shadow {enable};
 	allow dom0_type $1:mmu {map_read map_write memorymap adjust pinpage physmap mmuext_op};
