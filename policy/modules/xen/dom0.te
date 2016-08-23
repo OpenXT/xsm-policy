@@ -41,7 +41,7 @@ allow dom0_t self:mmu { pinpage map_read map_write adjust updatemp stat exchange
 allow dom0_t self:grant { query setup };
 allow dom0_t self:domain { getscheduler getdomaininfo getvcpuinfo
                            getaffinity };
-allow dom0_t self:domain2 { setscheduler iommu_map_batch iommu_x_mapping aperture_map };
+allow dom0_t self:domain2 { setscheduler };
 
 allow dom0_t self:event { bind create };
 allow dom0_t self:resource { add remove setup };
