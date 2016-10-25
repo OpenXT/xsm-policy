@@ -71,6 +71,8 @@ allow xen_t iomem_t:resource { add_iomem remove_iomem };
 allow xen_t pirq_t:resource { add_irq remove_irq };
 allow xen_t { ndvm_t hvm_guest_t stubdom_t }:resource remove;
 
+device_remove_resource(xen_t)
+
 syncvm_remove_resource(xen_t)
 
 ########################################
