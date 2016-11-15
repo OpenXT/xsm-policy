@@ -88,11 +88,13 @@ allow xen_t dom0_type:resource { add remove };
 allow dom0_type xen_t:mmu { memorymap };
 allow dom0_type xen_t:xen { kexec readapic writeapic mtrr_read mtrr_add mtrr_del 
                          getscheduler setscheduler physinfo heap quirk
-                         settime microcode firmware sleep getcpuinfo pm_op };
+                         settime microcode firmware sleep getcpuinfo pm_op
+			 cpupool_op };
 
 # dom0 access to hvm guests
 allow dom0_type hvm_type:hvm { cacheattr getparam irqlevel pcilevel pciroute
-                               nested setparam hvmctl trackdirtyvram send_irq };
+                               nested setparam hvmctl trackdirtyvram send_irq
+			       altp2mhvm };
 
 ########################################
 #

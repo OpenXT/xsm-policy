@@ -40,12 +40,14 @@ interface(`xen_domain_type',`
 	allow dom0_type $1:domain {create destroy max_vcpus setdomainmaxmem 
 				setaddrsize getdomaininfo hypercall 
 				setvcpucontext getscheduler pause unpause 
-				getvcpuinfo getvcpuextstate getaddrsize getaffinity settime
-				setdomainhandle shutdown set_misc_info };
-	allow dom0_type $1:domain2 {setcorespersocket setscheduler set_cpuid set_as_target };
+				getvcpuinfo getvcpuextstate getaddrsize
+				setaffinity getaffinity settime
+				setdomainhandle shutdown set_misc_info trigger};
+	allow dom0_type $1:domain2 {setcorespersocket setscheduler set_cpuid
+				   set_as_target set_max_evtchn settsc};
 			
 	allow dom0_type $1:shadow {enable};
-	allow dom0_type $1:mmu {map_read map_write memorymap adjust pinpage physmap mmuext_op};
+	allow dom0_type $1:mmu {map_read map_write memorymap adjust pinpage physmap mmuext_op stat };
 	allow dom0_type $1:resource { add remove };
 	allow $1 $1:mmu {map_read map_write adjust pinpage};
 	allow $1 domio_t:mmu {map_read};
