@@ -80,7 +80,7 @@ ndvm_use(hvm_guest_t)
 nilfvm_use(hvm_guest_t)
 dom0_copy_grant(hvm_guest_t)
 dom0_map_write_grant_guest(hvm_guest_t)
-dom0_pt_guest(hvm_guest_t)
+dom0_pt_guest_iommu_nointremap(hvm_guest_t)
 # Uncomment these if you wish to allow guests to use v4v.
 #dom0_send_v4v(hvm_guest_t)
 #dom0_recv_v4v(hvm_guest_t)
