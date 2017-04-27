@@ -70,7 +70,25 @@ interface(`ioport_use_resource',`
 		type ioport_t;
 	')
 
-	allow $1 ioport_t:resource use;
+	allow $1 ioport_t:resource { use use_with_iommu };
+')
+########################################
+## <summary>
+##	Allow the specified type to use
+##	ioport resources only if IOMMU provides isolation.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`ioport_use_resource_with_iommu',`
+	gen_require(`
+		type ioport_t;
+	')
+
+	allow $1 ioport_t:resource use_with_iommu;
 ')
 ########################################
 ## <summary>
@@ -124,7 +142,25 @@ interface(`pirq_use_resource',`
 		type pirq_t;
 	')
 
-	allow $1 pirq_t:resource use;
+	allow $1 pirq_t:resource { use use_with_iommu };
+')
+########################################
+## <summary>
+##	Allow the specified type to use
+##	pirq resources only if IOMMU provides isolation.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`pirq_use_resource_with_iommu',`
+	gen_require(`
+		type pirq_t;
+	')
+
+	allow $1 pirq_t:resource use_with_iommu;
 ')
 ########################################
 ## <summary>
@@ -324,7 +360,25 @@ interface(`domio_use_resource',`
 		type domio_t;
 	')
 
-	allow $1 domio_t:resource use;
+	allow $1 domio_t:resource { use use_with_iommu };
+')
+########################################
+## <summary>
+##	Allow the specified type to
+##	use domio resources only if IOMMU provides isolation.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`domio_use_resource_with_iommu',`
+	gen_require(`
+		type domio_t;
+	')
+
+	allow $1 domio_t:resource use_with_iommu;
 ')
 ########################################
 ## <summary>
@@ -342,7 +396,25 @@ interface(`iomem_use_resource',`
 		type iomem_t;
 	')
 
-	allow $1 iomem_t:resource use;
+	allow $1 iomem_t:resource { use use_with_iommu};
+')
+########################################
+## <summary>
+##	Allow the specified type to
+##	use iomem resources only if IOMMU provides isolation.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`iomem_use_resource_with_iommu',`
+	gen_require(`
+		type iomem_t;
+	')
+
+	allow $1 iomem_t:resource use_with_iommu;
 ')
 ########################################
 ## <summary>
@@ -360,7 +432,25 @@ interface(`device_use_resource',`
 		type device_t;
 	')
 
-	allow $1 device_t:resource use;
+	allow $1 device_t:resource { use use_with_iommu };
+')
+########################################
+## <summary>
+##	Allow the specified type to
+##	use device resources only if IOMMU provides isolation.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`device_use_resource_with_iommu',`
+	gen_require(`
+		type device_t;
+	')
+
+	allow $1 device_t:resource use_with_iommu;
 ')
 ########################################
 ## <summary>
@@ -539,10 +629,31 @@ interface(`dom0_pt_guest',`
 		type pirq_t, device_t, iomem_t, ioport_t;
 	')
 
-	allow $1 pirq_t:resource use;
-	allow $1 device_t:resource use;
-	allow $1 iomem_t:resource use;
-	allow $1 ioport_t:resource use;
+    pirq_use_resource($1)
+    device_use_resource($1)
+    iomem_use_resource($1)
+    ioport_use_resource($1)
+')
+########################################
+## <summary>
+##	Allow dom0 to pass through PCI devices
+##	to the specified guest.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`dom0_pt_guest_with_iommu',`
+	gen_require(`
+		type pirq_t, device_t, iomem_t, ioport_t;
+	')
+
+    pirq_use_resource_with_iommu($1)
+    device_use_resource_with_iommu($1)
+    iomem_use_resource_with_iommu($1)
+    ioport_use_resource_with_iommu($1)
 ')
 ########################################
 ## <summary>
@@ -582,7 +693,31 @@ interface(`use_device',`
 		type domio_t;
 	')
 
-	allow $1 $2:resource use;
+	allow $1 $2:resource { use use_with_iommu };
+	allow $1 domio_t:mmu { map_read map_write };
+')
+########################################
+## <summary>
+##	Allow a device to be used by a domain
+##  only if an IOMMU provides isolation.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain.
+##	</summary>
+## </param>
+## <param name="type">
+##	<summary>
+##	Type of the device.
+##	</summary>
+## </param>
+#
+interface(`use_device_with_iommu',`
+	gen_require(`
+		type domio_t;
+	')
+
+	allow $1 $2:resource use_with_iommu;
 	allow $1 domio_t:mmu { map_read map_write };
 ')
 ########################################
@@ -601,6 +736,24 @@ interface(`iomem_use_device',`
 	')
 
 	use_device($1, iomem_t)
+')
+########################################
+## <summary>
+##	Allow a domain to use the iomem device
+##  only if an IOMMU provides isolation.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain.
+##	</summary>
+## </param>
+#
+interface(`iomem_use_device_with_iommu',`
+	gen_require(`
+		type iomem_t;
+	')
+
+	use_device_with_iommu($1, iomem_t)
 ')
 ########################################
 ## <summary>

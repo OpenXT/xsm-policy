@@ -19,5 +19,6 @@ class event
 class grant
 class security
 class v4v
+class iommu
 
 # FLASK

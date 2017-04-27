@@ -430,6 +430,12 @@ class resource
 #  target = resource's security label
 # also checked when using some core Xen devices (target xen_t)
     use
+# IOMMU required before a resource will be added to a domain:
+# checked when adding a resource to a domain:
+#  source = domain which will have access to the resource
+#  target = resource's security label
+# also checked when using some core Xen devices (target xen_t)
+    use_with_iommu
 # PHYSDEVOP_map_pirq and ioapic writes for dom0, when acting on real IRQs
 #  For GSI interrupts, the IRQ's label is indexed by the IRQ number
 #  For MSI interrupts, the label of the PCI device is used
@@ -460,6 +466,15 @@ class resource
 # checked for PHYSDEVOP_setup_gsi (target IRQ)
 # checked for PHYSDEVOP_pci_mmcfg_reserved (target xen_t)
     setup
+}
+
+# Class IOMMU governs whether a weak IOMMU is tolerable
+class iommu
+{
+# Allow use of an insecure IOMMU to grant resouces to domains that
+# require an IOMMU.
+# Provided to enable support with administrator consent for older hardware.
+    use_insecure
 }
 
 # Class security describes the FLASK security server itself; these operations
