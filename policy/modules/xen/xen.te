@@ -96,6 +96,13 @@ allow dom0_type hvm_type:hvm { cacheattr getparam irqlevel pcilevel pciroute
                                nested setparam hvmctl trackdirtyvram send_irq
 			       altp2mhvm };
 
+# Choice: VM isolation vs. compatibility with older hardware:
+# dom0 permission to use an insecure IOMMU
+# with VMs with XSM policy that requires an IOMMU before allowing device access.
+# The more secure choice is NOT to allow "use_insecure" but prevents
+# compatibility with older machines incapable of interrupt remapping.
+allow dom0_type xen_t:iommu { use_insecure };
+
 ########################################
 #
 #  HVM attribute
