@@ -40,7 +40,7 @@ interface(`xen_domain_type',`
 	allow dom0_type $1:domain {create destroy max_vcpus setdomainmaxmem 
 				setaddrsize getdomaininfo hypercall 
 				setvcpucontext getscheduler pause unpause 
-				getvcpuinfo getvcpuextstate getaddrsize
+				getvcpuinfo getaddrsize
 				setaffinity getaffinity settime
 				setdomainhandle shutdown set_misc_info trigger};
 	allow dom0_type $1:domain2 {setcorespersocket setscheduler set_cpuid

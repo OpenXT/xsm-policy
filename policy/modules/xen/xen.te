@@ -92,8 +92,8 @@ allow dom0_type xen_t:xen { kexec readapic writeapic mtrr_read mtrr_add mtrr_del
 			 cpupool_op };
 
 # dom0 access to hvm guests
-allow dom0_type hvm_type:hvm { cacheattr getparam irqlevel pcilevel pciroute
-                               nested setparam hvmctl trackdirtyvram send_irq
+allow dom0_type hvm_type:hvm { cacheattr getparam
+                               nested setparam hvmctl
 			       altp2mhvm };
 
 ########################################
