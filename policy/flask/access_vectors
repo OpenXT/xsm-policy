@@ -93,6 +93,14 @@ class xen2
     pmu_ctrl
 # PMU use (domains, including unprivileged ones, will be using this operation)
     pmu_use
+# XEN_SYSCTL_get_cpu_levelling_caps
+    get_cpu_levelling_caps
+# XEN_SYSCTL_get_cpu_featureset
+    get_cpu_featureset
+# XEN_SYSCTL_livepatch_op
+    livepatch_op
+# XEN_SYSCTL_gcov_op
+    gcov_op
 }
 
 # Classes domain and domain2 consist of operations that a domain performs on
@@ -105,6 +113,9 @@ class xen2
 class domain
 {
 # XEN_DOMCTL_setvcpucontext
+# XEN_DOMCTL_setvcpuextstate
+# XEN_DOMCTL_set_ext_vcpucontext
+# XEN_DOMCTL_set_vcpu_msrs
     setvcpucontext
 # XEN_DOMCTL_pausedomain
     pause
@@ -136,6 +147,9 @@ class domain
 # XEN_DOMCTL_getvcpuinfo
     getvcpuinfo
 # XEN_DOMCTL_getvcpucontext
+# XEN_DOMCTL_get_ext_vcpucontext
+# XEN_DOMCTL_getvcpuextstate
+# XEN_DOMCTL_get_vcpu_msrs
     getvcpucontext
 # XEN_DOMCTL_max_mem
     setdomainmaxmem
@@ -160,16 +174,6 @@ class domain
     getaddrsize
 # XEN_DOMCTL_sendtrigger
     trigger
-# XEN_DOMCTL_get_ext_vcpucontext
-# XEN_DOMCTL_set_vcpu_msrs
-    getextvcpucontext
-# XEN_DOMCTL_set_ext_vcpucontext
-# XEN_DOMCTL_get_vcpu_msrs
-    setextvcpucontext
-# XEN_DOMCTL_getvcpuextstate
-    getvcpuextstate
-# XEN_DOMCTL_setvcpuextstate
-    setvcpuextstate
 # XENMEM_get_pod_target
     getpodtarget
 # XENMEM_set_pod_target
@@ -216,8 +220,6 @@ class domain2
     setscheduler
 # XENMEM_claim_pages
     setclaim
-# XEN_DOMCTL_setcorespersocket
-    setcorespersocket
 # XEN_DOMCTL_set_max_evtchn
     set_max_evtchn
 # XEN_DOMCTL_cacheflush
@@ -234,6 +236,8 @@ class domain2
 # XEN_DOMCTL_monitor_op
 # XEN_DOMCTL_vm_event_op
     vm_event
+# XEN_DOMCTL_soft_reset
+    soft_reset
 # XENMEM_access_op
     mem_access
 # XENMEM_paging_op
@@ -242,6 +246,8 @@ class domain2
     mem_sharing
 # XEN_DOMCTL_psr_cat_op
     psr_cat_op
+# XEN_DOMCTL_setcorespersocket
+    setcorespersocket
 }
 
 # Similar to class domain, but primarily contains domctls related to HVM domains
@@ -255,20 +261,11 @@ class hvm
     setparam
 # HVMOP_get_param
     getparam
-# HVMOP_set_pci_intx_level (also needs hvmctl)
-    pcilevel
-# HVMOP_set_isa_irq_level
-    irqlevel
-# HVMOP_set_pci_link_route
-    pciroute
     bind_irq
 # XEN_DOMCTL_pin_mem_cacheattr
     cacheattr
-# HVMOP_track_dirty_vram
-    trackdirtyvram
-# HVMOP_modified_memory, HVMOP_get_mem_type, HVMOP_set_mem_type,
-# HVMOP_set_mem_access, HVMOP_get_mem_access, HVMOP_pagetable_dying,
-# HVMOP_inject_trap
+# HVMOP_get_mem_type,
+# HVMOP_set_mem_access, HVMOP_get_mem_access, HVMOP_pagetable_dying
     hvmctl
 # XEN_DOMCTL_mem_sharing_op and XENMEM_sharing_op_{share,add_physmap} with:
 #  source = the domain making the hypercall
@@ -276,8 +273,6 @@ class hvm
     mem_sharing
 # XEN_DOMCTL_audit_p2m
     audit_p2m
-# HVMOP_inject_msi
-    send_irq
 # checked in XENMEM_sharing_op_{share,add_physmap} with:
 #  source = domain whose memory is being shared
 #  target = client domain
@@ -291,6 +286,8 @@ class hvm
 # HVMOP_altp2m_destroy_p2m HVMOP_altp2m_switch_p2m
 # HVMOP_altp2m_set_mem_access HVMOP_altp2m_change_gfn
     altp2mhvm_op
+# DMOP
+    dm
 }
 
 # Class event describes event channels.  Interdomain event channels have their
@@ -498,8 +495,6 @@ class security
     load_policy
 # use the security server to compute an object relabel
     compute_relabel
-# use the security server to list the SIDs reachable by a given user
-    compute_user
 # allow switching between enforcing and permissive mode
     setenforce
 # allow changing policy booleans
@@ -510,6 +505,33 @@ class security
     add_ocontext
 # remove ocontext label definitions for resources
     del_ocontext
+}
+
+# Class version is used to describe the XENVER_ hypercall.
+# Almost all sub-ops are described here - in the default case all of them should
+# be allowed except the XENVER_commandline.
+#
+# The ones that are omitted are XENVER_version, XENVER_platform_parameters,
+# and XENVER_get_features  - as they MUST always be returned to a guest.
+#
+class version
+{
+# Extra informations (-unstable).
+    xen_extraversion
+# Compile information of the hypervisor.
+    xen_compile_info
+# Such as "xen-3.0-x86_64 xen-3.0-x86_32p hvm-3.0-x86_32 hvm-3.0-x86_32p hvm-3.0-x86_64".
+    xen_capabilities
+# Source code changeset.
+    xen_changeset
+# Page size the hypervisor uses.
+    xen_pagesize
+# An value that the control stack can choose.
+    xen_guest_handle
+# Xen command line.
+    xen_commandline
+# Xen build id
+    xen_build_id
 }
 
 class v4v
