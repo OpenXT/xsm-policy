@@ -90,11 +90,15 @@ allow dom0_type xen_t:xen { kexec readapic writeapic mtrr_read mtrr_add mtrr_del
                          getscheduler setscheduler physinfo heap quirk
                          settime microcode firmware sleep getcpuinfo pm_op
 			 cpupool_op };
+allow dom0_type xen_t:version { xen_compile_info xen_capabilities
+                                xen_changeset xen_pagesize
+                                xen_commandline xen_build_id
+                                xen_extraversion };
 
 # dom0 access to hvm guests
 allow dom0_type hvm_type:hvm { cacheattr getparam
                                nested setparam hvmctl
-			       altp2mhvm };
+                               altp2mhvm gethvmc sethvmc };
 
 ########################################
 #

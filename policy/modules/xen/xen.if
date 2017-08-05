@@ -49,10 +49,12 @@ interface(`xen_domain_type',`
 	allow dom0_type $1:shadow {enable};
 	allow dom0_type $1:mmu {map_read map_write memorymap adjust pinpage physmap mmuext_op stat };
 	allow dom0_type $1:resource { add remove };
+	allow dom0_type $1:domain { getvcpucontext };
 	allow $1 $1:mmu {map_read map_write adjust pinpage};
 	allow $1 domio_t:mmu {map_read};
 	allow $1 $1:grant {query setup};
 	allow dom0_type $1:grant { copy map_read unmap query setup };
+    allow $1 xen_t:version { xen_extraversion };
 ')
 ########################################
 ## <summary>
