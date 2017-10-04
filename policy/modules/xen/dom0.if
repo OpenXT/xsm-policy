@@ -73,6 +73,25 @@ interface(`dom0_event_src',`
 ')
 ########################################
 ## <summary>
+##	Allow a type to use dom0 to host its driver domain.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain using dom0 as its driver domain.
+##      Note: see stubdom.if for more rules that dom0 doesn't
+##            seem to require
+##	</summary>
+## </param>
+#
+interface(`dom0_ioemu',`
+	gen_require(`
+		type dom0_t;
+	')
+
+	allow dom0_t $1:hvm dm;
+')
+########################################
+## <summary>
 ##	Allow the specified type to copy dom0 grants.
 ## </summary>
 ## <param name="type">
