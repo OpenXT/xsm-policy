@@ -73,7 +73,7 @@ interface(`stubdom_event_src',`
 ')
 ########################################
 ## <summary>
-##	Allow a type to use a stubdom to host it's IOEMU.
+##	Allow a type to use a stubdom to host its IOEMU.
 ## </summary>
 ## <param name="type">
 ##	<summary>
