@@ -26,6 +26,7 @@ policy_module(ndvm, 0.2)
 type ndvm_t;
 xen_domain_type(ndvm_t)
 xen_pv_type(ndvm_t)
+xen_hvm_type(ndvm_t)
 
 type ndvm-dom0_evchn_t;
 xen_event_type(ndvm-dom0_evchn_t)
