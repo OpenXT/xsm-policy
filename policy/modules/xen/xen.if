@@ -651,6 +651,12 @@ interface(`xen_hvm_type',`
                 attribute hvm_type;
 	')
 
+	allow $1 self:mmu physmap;
+	allow $1 self:grant copy;
+	allow $1 self:resource remove;
+	allow $1 self:domain2 get_vnumainfo;
+	allow $1 xen_t:version xen_guest_handle;
+
 	typeattribute $1 hvm_type;
 ')
 ########################################

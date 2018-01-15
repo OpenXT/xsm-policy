@@ -71,12 +71,6 @@ nilfvm_event_src(hvm_guest_t, nilfvm-hvm_guest_evchn_t)
 # HVM Guest Local policy
 #
 
-allow hvm_guest_t self:mmu physmap;
-allow hvm_guest_t self:grant copy;
-allow hvm_guest_t self:resource remove;
-allow hvm_guest_t self:domain2 get_vnumainfo;
-allow hvm_guest_t xen_t:version xen_guest_handle;
-
 ndvm_use(hvm_guest_t)
 nilfvm_use(hvm_guest_t)
 dom0_copy_grant(hvm_guest_t)
