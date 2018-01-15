@@ -35,6 +35,15 @@ type dom0-ndvm_evchn_t;
 xen_event_type(dom0-ndvm_evchn_t)
 dom0_event_src(ndvm_t, dom0-ndvm_evchn_t)
 
+#types for event channel between ndvm and stubdom
+type ndvm-stubdom_evchn_t;
+xen_event_type(ndvm-stubdom_evchn_t)
+stubdom_event_dst(ndvm_t, ndvm-stubdom_evchn_t)
+
+type stubdom-ndvm_evchn_t;
+xen_event_type(stubdom-ndvm_evchn_t)
+stubdom_event_src(ndvm_t, stubdom-ndvm_evchn_t)
+
 ########################################
 #
 # Local Policy
@@ -49,6 +58,7 @@ iomem_use_resource_iommu_nointremap(ndvm_t)
 pirq_remove_resource(ndvm_t)
 pirq_use_resource_iommu_nointremap(ndvm_t)
 syncvm_remove_resource(ndvm_t)
+stubdom_ioemu(ndvm_t)
 uivm_send_v4v(ndvm_t)
 xen_write_console(ndvm_t)
 dom0_map_write_grant(ndvm_t)
