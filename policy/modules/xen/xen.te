@@ -49,6 +49,8 @@ sid irq gen_context(system_u:object_r:pirq_t,s0)
 sid iomem gen_context(system_u:object_r:iomem_t,s0)
 sid ioport gen_context(system_u:object_r:ioport_t,s0)
 sid device gen_context(system_u:object_r:device_t,s0)
+sid domU gen_context(system_u:system_r:hvm_guest_t,s0)
+sid domDM gen_context(system_u:system_r:stubdom_t,s0)
 
 role system_r;
 role user_r;
@@ -68,6 +70,8 @@ allow xen_t ioport_t:resource { add_ioport remove_ioport };
 allow xen_t iomem_t:resource { add_iomem remove_iomem };
 allow xen_t pirq_t:resource { add_irq remove_irq };
 allow xen_t { ndvm_t hvm_guest_t stubdom_t }:resource remove;
+
+device_remove_resource(xen_t)
 
 syncvm_remove_resource(xen_t)
 

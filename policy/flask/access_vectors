@@ -3,12 +3,13 @@
 #
 # class class_name { permission_name ... }
 
-# Class xen consists of dom0-only operations dealing with the hypervisor itself.
-# Unless otherwise specified, the source is the domain executing the hypercall,
-# and the target is the xen initial sid (type xen_t).
+# Class xen and xen2 consists of dom0-only operations dealing with the
+# hypervisor itself. Unless otherwise specified, the source is the domain
+# executing the hypercall, and the target is the xen initial sid (type xen_t).
 class xen
 {
-# XENPF_settime
+# XENPF_settime32
+# XENPF_settime64
     settime
 # XEN_SYSCTL_tbuf_op
     tbufcontrol
@@ -26,7 +27,8 @@ class xen
     mtrr_read
 # XENPF_microcode_update
     microcode
-# XEN_SYSCTL_physinfo, XEN_SYSCTL_topologyinfo, XEN_SYSCTL_numainfo
+# XEN_SYSCTL_physinfo, XEN_SYSCTL_cputopoinfo, XEN_SYSCTL_numainfo
+# XEN_SYSCTL_pcitopoinfo
     physinfo
 # XENPF_platform_quirk
     quirk
@@ -67,12 +69,30 @@ class xen
     cpupool_op
 # tmem hypercall (any access)
     tmem_op
-# TMEM_CONTROL command of tmem hypercall
+# XEN_SYSCTL_tmem_op command of tmem (part of sysctl)
     tmem_control
 # XEN_SYSCTL_scheduler_op with XEN_DOMCTL_SCHEDOP_getinfo, XEN_SYSCTL_sched_id
     getscheduler
 # XEN_SYSCTL_scheduler_op with XEN_DOMCTL_SCHEDOP_putinfo
     setscheduler
+}
+
+# This is a continuation of class xen, since only 32 permissions can be
+# defined per class
+class xen2
+{
+# XENPF_resource_op
+    resource_op
+# XEN_SYSCTL_psr_cmt_op
+    psr_cmt_op
+# XEN_SYSCTL_psr_cat_op
+    psr_cat_op
+# XENPF_get_symbol
+    get_symbol
+# PMU control
+    pmu_ctrl
+# PMU use (domains, including unprivileged ones, will be using this operation)
+    pmu_use
 }
 
 # Classes domain and domain2 consist of operations that a domain performs on
@@ -92,7 +112,7 @@ class domain
     unpause
 # XEN_DOMCTL_resumedomain
     resume
-# XEN_DOMCTL_createdomain
+# XEN_DOMCTL_arm_createdomain
     create
 # checked in FLASK_RELABEL_DOMAIN for any relabel operation:
 #  source = the old label of the domain
@@ -141,8 +161,10 @@ class domain
 # XEN_DOMCTL_sendtrigger
     trigger
 # XEN_DOMCTL_get_ext_vcpucontext
+# XEN_DOMCTL_set_vcpu_msrs
     getextvcpucontext
 # XEN_DOMCTL_set_ext_vcpucontext
+# XEN_DOMCTL_get_vcpu_msrs
     setextvcpucontext
 # XEN_DOMCTL_getvcpuextstate
     getvcpuextstate
@@ -196,16 +218,30 @@ class domain2
     setclaim
 # XEN_DOMCTL_setcorespersocket
     setcorespersocket
-# XEN_DOMCTL_setbiosuuid
-    setbiosuuid
-# XEN_DOMCTL_set_xcisrv
-    set_xcisrv
-# XEN_DOMCTL_aperture_map
-    aperture_map
-# XEN_DOMCTL_iommu_x_mapping
-    iommu_x_mapping
-# XEN_DOMCTL_iommu_map_batch
-    iommu_map_batch
+# XEN_DOMCTL_set_max_evtchn
+    set_max_evtchn
+# XEN_DOMCTL_cacheflush
+    cacheflush
+# Creation of the hardware domain when it is not dom0
+    create_hardware_domain
+# XEN_DOMCTL_setvnumainfo
+    set_vnumainfo
+# XENMEM_getvnumainfo
+    get_vnumainfo
+# XEN_DOMCTL_psr_cmt_op
+    psr_cmt_op
+# XEN_DOMCTL_set_access_required
+# XEN_DOMCTL_monitor_op
+# XEN_DOMCTL_vm_event_op
+    vm_event
+# XENMEM_access_op
+    mem_access
+# XENMEM_paging_op
+    mem_paging
+# XENMEM_sharing_op
+    mem_sharing
+# XEN_DOMCTL_psr_cat_op
+    psr_cat_op
 }
 
 # Similar to class domain, but primarily contains domctls related to HVM domains
@@ -234,8 +270,6 @@ class hvm
 # HVMOP_set_mem_access, HVMOP_get_mem_access, HVMOP_pagetable_dying,
 # HVMOP_inject_trap
     hvmctl
-# XEN_DOMCTL_set_access_required
-    mem_event
 # XEN_DOMCTL_mem_sharing_op and XENMEM_sharing_op_{share,add_physmap} with:
 #  source = the domain making the hypercall
 #  target = domain whose memory is being shared
@@ -250,6 +284,13 @@ class hvm
     share_mem
 # HVMOP_set_param setting HVM_PARAM_NESTEDHVM
     nested
+# HVMOP_set_param setting HVM_PARAM_ALTP2MHVM
+    altp2mhvm
+# HVMOP_altp2m_set_domain_state HVMOP_altp2m_get_domain_state
+# HVMOP_altp2m_vcpu_enable_notify HVMOP_altp2m_create_p2m
+# HVMOP_altp2m_destroy_p2m HVMOP_altp2m_switch_p2m
+# HVMOP_altp2m_set_mem_access HVMOP_altp2m_change_gfn
+    altp2mhvm_op
 }
 
 # Class event describes event channels.  Interdomain event channels have their
@@ -317,7 +358,7 @@ class mmu
 #  source = domain making the hypercall
 #  target = domain whose pages are being mapped
     map_write
-# XEN_DOMCTL_getpageframeinfo*
+# XEN_DOMCTL_getpageframeinfo3
     pageinfo
 # XEN_DOMCTL_getmemlist
     pagelist
@@ -384,11 +425,27 @@ class resource
 #  source = domain making the hypercall
 #  target = domain which will no longer have access to the resource
     remove
+# checked when using some core Xen devices (target xen_t)
+#  source = domain which will have access to the resource
+#  target = xen_t
+    use
 # checked when adding a resource to a domain:
 #  source = domain which will have access to the resource
 #  target = resource's security label
-# also checked when using some core Xen devices (target xen_t)
-    use
+# Requires an active IOMMU capable of interrupt remapping in order to
+# enforce isolation.
+    use_iommu
+# checked when adding a resource to a domain when an IOMMU is available
+# but it is not capable of interrupt mapping:
+#  source = domain which will have access to the resource
+#  target = resource's security label
+# Enable this to allow some less secure systems to still work.
+    use_iommu_nointremap
+# checked when adding a resource to a domain when no IOMMU present:
+#  source = domain which will have access to the resource
+#  target = resource's security label
+# Enable this to allow some less secure systems to still work.
+    use_noiommu
 # PHYSDEVOP_map_pirq and ioapic writes for dom0, when acting on real IRQs
 #  For GSI interrupts, the IRQ's label is indexed by the IRQ number
 #  For MSI interrupts, the label of the PCI device is used
@@ -403,7 +460,7 @@ class resource
     remove_iomem
 # XEN_DOMCTL_get_device_group, XEN_DOMCTL_test_assign_device:
 #  source = domain making the hypercall
-#  target = PCI device being queried
+#  target = device being queried
     stat_device
 # XEN_DOMCTL_assign_device
     add_device

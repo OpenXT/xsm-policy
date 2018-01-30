@@ -42,7 +42,7 @@ interface(`xen_domain_type',`
 				setvcpucontext getscheduler pause unpause 
 				getvcpuinfo getvcpuextstate getaddrsize getaffinity settime
 				setdomainhandle shutdown set_misc_info };
-	allow dom0_type $1:domain2 {setcorespersocket setscheduler set_xcisrv set_cpuid set_as_target iommu_x_mapping iommu_map_batch aperture_map };
+	allow dom0_type $1:domain2 {setcorespersocket setscheduler set_cpuid set_as_target };
 			
 	allow dom0_type $1:shadow {enable};
 	allow dom0_type $1:mmu {map_read map_write memorymap adjust pinpage physmap mmuext_op};
@@ -55,7 +55,8 @@ interface(`xen_domain_type',`
 ########################################
 ## <summary>
 ##	Allow the specified type to use
-##	ioport resources.
+##	ioport resources
+##	only if an IOMMU provides isolation.
 ## </summary>
 ## <param name="type">
 ##	<summary>
@@ -63,12 +64,51 @@ interface(`xen_domain_type',`
 ##	</summary>
 ## </param>
 #
-interface(`ioport_use_resource',`
+interface(`ioport_use_resource_iommu',`
 	gen_require(`
 		type ioport_t;
 	')
 
-	allow $1 ioport_t:resource use;
+	allow $1 ioport_t:resource use_iommu;
+')
+########################################
+## <summary>
+##	Allow the specified type to use
+##	ioport resources
+##	only if an IOMMU is active, even if it does not support
+##	interrupt remapping. Enables use of less secure hardware.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`ioport_use_resource_iommu_nointremap',`
+	gen_require(`
+		type ioport_t;
+	')
+
+	allow $1 ioport_t:resource { use_iommu use_iommu_nointremap };
+')
+########################################
+## <summary>
+##	Allow the specified type to use
+##	ioport resources
+##	even without an IOMMU available.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`ioport_use_resource_noiommu',`
+	gen_require(`
+		type ioport_t;
+	')
+
+	allow $1 ioport_t:resource { use_iommu use_iommu_nointremap use_noiommu };
 ')
 ########################################
 ## <summary>
@@ -102,14 +142,15 @@ interface(`ioport_add_resource',`
 interface(`ioport_remove_resource',`
 	gen_require(`
 		type ioport_t;
-	')
+')
 
 	allow $1 ioport_t:resource remove_ioport;
 ')
 ########################################
 ## <summary>
 ##	Allow the specified type to use
-##	pirq resources.
+##	pirq resources
+##	only if an IOMMU provides isolation.
 ## </summary>
 ## <param name="type">
 ##	<summary>
@@ -117,12 +158,51 @@ interface(`ioport_remove_resource',`
 ##	</summary>
 ## </param>
 #
-interface(`pirq_use_resource',`
+interface(`pirq_use_resource_iommu',`
 	gen_require(`
 		type pirq_t;
 	')
 
-	allow $1 pirq_t:resource use;
+	allow $1 pirq_t:resource use_iommu;
+')
+########################################
+## <summary>
+##	Allow the specified type to use
+##	pirq resources
+##	only if an IOMMU is active, even if it does not support
+##	interrupt remapping. Enables use of less secure hardware.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`pirq_use_resource_iommu_nointremap',`
+	gen_require(`
+		type pirq_t;
+	')
+
+	allow $1 pirq_t:resource { use_iommu use_iommu_nointremap };
+')
+########################################
+## <summary>
+##	Allow the specified type to use
+##	pirq resources
+##	even without an IOMMU available.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`pirq_use_resource_noiommu',`
+	gen_require(`
+		type pirq_t;
+	')
+
+	allow $1 pirq_t:resource { use_iommu use_iommu_nointremap use_noiommu };
 ')
 ########################################
 ## <summary>
@@ -159,26 +239,6 @@ interface(`pirq_remove_resource',`
 	')
 
 	allow $1 pirq_t:resource remove_irq;
-')
-########################################
-## <summary>
-##	Allow the specified type to manage to
-##	pirq resources.
-## </summary>
-## <param name="type">
-##	<summary>
-##	Type of the domain allowed access.
-##	</summary>
-## </param>
-#
-interface(`pirq_manage_resource',`
-	gen_require(`
-		type pirq_t;
-	')
-
-	pirq_add_resource($1)
-	pirq_remove_resource($1)
-	pirq_use_resource($1)
 ')
 ########################################
 ## <summary>
@@ -309,7 +369,8 @@ interface(`domio_map_rw_mmu',`
 ########################################
 ## <summary>
 ##	Allow the specified type to
-##	use domio resources.
+##	use domio resources
+##  only if an IOMMU provides isolation.
 ## </summary>
 ## <param name="type">
 ##	<summary>
@@ -317,17 +378,19 @@ interface(`domio_map_rw_mmu',`
 ##	</summary>
 ## </param>
 #
-interface(`domio_use_resource',`
+interface(`domio_use_resource_iommu',`
 	gen_require(`
 		type domio_t;
 	')
 
-	allow $1 domio_t:resource use;
+	allow $1 domio_t:resource use_iommu;
 ')
 ########################################
 ## <summary>
 ##	Allow the specified type to
-##	use iomem resources.
+##	use domio resources
+##  only if an IOMMU is active, even if it does not support
+##  interrupt remapping. Enables use of less secure hardware.
 ## </summary>
 ## <param name="type">
 ##	<summary>
@@ -335,17 +398,57 @@ interface(`domio_use_resource',`
 ##	</summary>
 ## </param>
 #
-interface(`iomem_use_resource',`
+interface(`domio_use_resource_iommu_nointremap',`
+	gen_require(`
+		type domio_t;
+	')
+
+	allow $1 domio_t:resource { use_iommu use_iommu_nointremap };
+')
+########################################
+## <summary>
+##	Allow the specified type to
+##	use domio resources
+##  even without an IOMMU available.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`domio_use_resource_noiommu',`
+	gen_require(`
+		type domio_t;
+	')
+
+	allow $1 domio_t:resource { use_iommu use_iommu_nointremap use_noiommu };
+')
+########################################
+## <summary>
+##	Allow the specified type to
+##	use iomem resources
+##  only if an IOMMU provides isolation.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`iomem_use_resource_iommu',`
 	gen_require(`
 		type iomem_t;
 	')
 
-	allow $1 iomem_t:resource use;
+	allow $1 iomem_t:resource use_iommu;
 ')
 ########################################
 ## <summary>
 ##	Allow the specified type to
-##	use device resources.
+##	use iomem resources
+##  only if an IOMMU is active, even if it does not support
+##  interrupt remapping. Enables use of less secure hardware.
 ## </summary>
 ## <param name="type">
 ##	<summary>
@@ -353,12 +456,89 @@ interface(`iomem_use_resource',`
 ##	</summary>
 ## </param>
 #
-interface(`device_use_resource',`
+interface(`iomem_use_resource_iommu_nointremap',`
+	gen_require(`
+		type iomem_t;
+	')
+
+	allow $1 iomem_t:resource { use_iommu use_iommu_nointremap };
+')
+########################################
+## <summary>
+##	Allow the specified type to
+##	use iomem resources
+##  even without an IOMMU available.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`iomem_use_resource_noiommu',`
+	gen_require(`
+		type iomem_t;
+	')
+
+	allow $1 iomem_t:resource { use_iommu use_iommu_nointremap use_noiommu };
+')
+########################################
+## <summary>
+##	Allow the specified type to
+##	use device resources
+##	only if an IOMMU provides isolation.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`device_use_resource_iommu',`
 	gen_require(`
 		type device_t;
 	')
 
-	allow $1 device_t:resource use;
+	allow $1 device_t:resource use_iommu;
+')
+########################################
+## <summary>
+##	Allow the specified type to
+##	use device resources
+##	only if an IOMMU is active, even if it does not support
+##	interrupt remapping. Enables use of less secure hardware.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`device_use_resource_iommu_nointremap',`
+	gen_require(`
+		type device_t;
+	')
+
+	allow $1 device_t:resource { use_iommu use_iommu_nointremap };
+')
+########################################
+## <summary>
+##	Allow the specified type to
+##	use device resources
+##	even without an IOMMU available.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`device_use_resource_noiommu',`
+	gen_require(`
+		type device_t;
+	')
+
+	allow $1 device_t:resource { use_iommu use_iommu_nointremap use_noiommu };
 ')
 ########################################
 ## <summary>
@@ -524,7 +704,8 @@ interface(`xen_rw_console',`
 ########################################
 ## <summary>
 ##	Allow dom0 to pass through PCI devices
-##	to the specified guest.
+##	to the specified guest
+##  only if an IOMMU provides isolation.
 ## </summary>
 ## <param name="type">
 ##	<summary>
@@ -532,15 +713,60 @@ interface(`xen_rw_console',`
 ##	</summary>
 ## </param>
 #
-interface(`dom0_pt_guest',`
+interface(`dom0_pt_guest_iommu',`
 	gen_require(`
 		type pirq_t, device_t, iomem_t, ioport_t;
 	')
 
-	allow $1 pirq_t:resource use;
-	allow $1 device_t:resource use;
-	allow $1 iomem_t:resource use;
-	allow $1 ioport_t:resource use;
+    pirq_use_resource_iommu($1)
+    device_use_resource_iommu($1)
+    iomem_use_resource_iommu($1)
+    ioport_use_resource_iommu($1)
+')
+########################################
+## <summary>
+##	Allow dom0 to pass through PCI devices
+##	to the specified guest
+##  only if an IOMMU is active, even if it does not support
+##  interrupt remapping. Enables use of less secure hardware.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`dom0_pt_guest_iommu_nointremap',`
+	gen_require(`
+		type pirq_t, device_t, iomem_t, ioport_t;
+	')
+
+    pirq_use_resource_iommu_nointremap($1)
+    device_use_resource_iommu_nointremap($1)
+    iomem_use_resource_iommu_nointremap($1)
+    ioport_use_resource_iommu_nointremap($1)
+')
+########################################
+## <summary>
+##	Allow dom0 to pass through PCI devices
+##	to the specified guest
+##  even without an IOMMU available.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`dom0_pt_guest_noiommu',`
+	gen_require(`
+		type pirq_t, device_t, iomem_t, ioport_t;
+	')
+
+    pirq_use_resource_noiommu($1)
+    device_use_resource_noiommu($1)
+    iomem_use_resource_noiommu($1)
+    ioport_use_resource_noiommu($1)
 ')
 ########################################
 ## <summary>
@@ -563,6 +789,7 @@ interface(`xen_dom0_type',`
 ########################################
 ## <summary>
 ##	Allow a device to be used by a domain
+##	only if an IOMMU provides isolation.
 ## </summary>
 ## <param name="type">
 ##	<summary>
@@ -575,17 +802,67 @@ interface(`xen_dom0_type',`
 ##	</summary>
 ## </param>
 #   
-interface(`use_device',`
+interface(`use_device_iommu',`
 	gen_require(`
 		type domio_t;
 	')
 
-	allow $1 $2:resource use;
+	allow $1 $2:resource use_iommu;
+	allow $1 domio_t:mmu { map_read map_write };
+')
+########################################
+## <summary>
+##	Allow a device to be used by a domain
+##	only if an IOMMU is available, even if
+##	the IOMMU is not capable of interrupt remapping.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain.
+##	</summary>
+## </param>
+## <param name="type">
+##	<summary>
+##	Type of the device.
+##	</summary>
+## </param>
+#
+interface(`use_device_iommu_nointremap',`
+	gen_require(`
+		type domio_t;
+	')
+
+	allow $1 $2:resource { use_iommu use_iommu_nointremap };
+	allow $1 domio_t:mmu { map_read map_write };
+')
+########################################
+## <summary>
+##	Allow a device to be used by a domain
+##	even without an IOMMU.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain.
+##	</summary>
+## </param>
+## <param name="type">
+##	<summary>
+##	Type of the device.
+##	</summary>
+## </param>
+#
+interface(`use_device_noiommu',`
+	gen_require(`
+		type domio_t;
+	')
+
+	allow $1 $2:resource { use_iommu use_iommu_nointremap use_noiommu };
 	allow $1 domio_t:mmu { map_read map_write };
 ')
 ########################################
 ## <summary>
 ##	Allow a domain to use the iomem device
+##	only if an IOMMU provides isolation.
 ## </summary>
 ## <param name="type">
 ##	<summary>
@@ -593,12 +870,49 @@ interface(`use_device',`
 ##	</summary>
 ## </param>
 #
-interface(`iomem_use_device',`
+interface(`iomem_use_device_iommu',`
 	gen_require(`
 		type iomem_t;
 	')
 
-	use_device($1, iomem_t)
+	use_device_iommu($1, iomem_t)
+')
+########################################
+## <summary>
+##	Allow a domain to use the iomem device
+##	only if an IOMMU is available, even if
+##	the IOMMU is not capable of interrupt remapping.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain.
+##	</summary>
+## </param>
+#
+interface(`iomem_use_device_iommu_nointremap',`
+	gen_require(`
+		type iomem_t;
+	')
+
+	use_device_iommu_nointremap($1, iomem_t)
+')
+########################################
+## <summary>
+##	Allow a domain to use the iomem device
+##	even without an IOMMU.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain.
+##	</summary>
+## </param>
+#
+interface(`iomem_use_device_noiommu',`
+	gen_require(`
+		type iomem_t;
+	')
+
+	use_device_noiommu($1, iomem_t)
 ')
 ########################################
 ## <summary>
@@ -618,7 +932,7 @@ interface(`iomem_use_device',`
 interface(`admin_device',`
 	allow $1 $2:resource { stat_device add_device add_irq add_iomem add_ioport remove_device remove_irq remove_iomem remove_ioport plug unplug setup };
 	allow $1 $2:hvm bind_irq;
-	use_device($1, $2)
+	use_device_noiommu($1, $2)
 ')
 ########################################
 ## <summary>

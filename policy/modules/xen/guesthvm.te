@@ -74,12 +74,13 @@ nilfvm_event_src(hvm_guest_t, nilfvm-hvm_guest_evchn_t)
 allow hvm_guest_t self:mmu physmap;
 allow hvm_guest_t self:grant copy;
 allow hvm_guest_t self:resource remove;
+allow hvm_guest_t self:domain2 get_vnumainfo;
 
 ndvm_use(hvm_guest_t)
 nilfvm_use(hvm_guest_t)
 dom0_copy_grant(hvm_guest_t)
 dom0_map_write_grant_guest(hvm_guest_t)
-dom0_pt_guest(hvm_guest_t)
+dom0_pt_guest_iommu_nointremap(hvm_guest_t)
 # Uncomment these if you wish to allow guests to use v4v.
 #dom0_send_v4v(hvm_guest_t)
 #dom0_recv_v4v(hvm_guest_t)
