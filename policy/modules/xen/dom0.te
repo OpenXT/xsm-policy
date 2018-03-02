@@ -53,6 +53,7 @@ allow dom0_t iomem_t:resource setup;
 allow dom0_t stubdom_t:domain2 make_priv_for;
 
 allow dom0_t xen_t:resource setup;
+allow dom0_t xen_t:xen2 get_cpu_featureset;
 
 domio_map_rw_mmu(dom0_t)
 
@@ -61,9 +62,11 @@ ndvm_manage_resource(dom0_t)
 ndvm_send_v4v(dom0_t)
 ndvm_use(dom0_t)
 ndvm_map_write_grant(dom0_t)
+ndvm_set_gnttab_limits(dom0_t)
 
 uivm_send_v4v(dom0_t)
 uivm_map_write_grant(dom0_t)
+uivm_set_gnttab_limits(dom0_t)
 
 syncvm_map_write_grant(dom0_t)
 
