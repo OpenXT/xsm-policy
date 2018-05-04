@@ -126,3 +126,20 @@ interface(`nilfvm_copy_grant',`
 
 	allow $1 nilfvm_t:grant copy;
 ')
+########################################
+## <summary>
+##	Allow the specified type to set nilfvm gnttab limits.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`nilfvm_set_gnttab_limits',`
+	gen_require(`
+		type nilfvm_t;
+	')
+
+	allow $1 nilfvm_t:domain2 set_gnttab_limits;
+')

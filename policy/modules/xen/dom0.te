@@ -73,10 +73,14 @@ syncvm_map_write_grant(dom0_t)
 icavm_map_write_grant(dom0_t)
 
 nilfvm_map_write_grant(dom0_t)
+nilfvm_set_gnttab_limits(dom0_t)
 
 stubdom_copy_grant(dom0_t)
 stubdom_send_v4v(dom0_t)
 stubdom_map_write_grant(dom0_t)
+stubdom_set_gnttab_limits(dom0_t)
+
+hvm_guest_set_gnttab_limits(dom0_t)
 
 # access to hardware & xen
 device_admin_device(dom0_t)
