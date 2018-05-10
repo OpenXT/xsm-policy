@@ -101,6 +101,8 @@ class xen2
     livepatch_op
 # XEN_SYSCTL_gcov_op
     gcov_op
+# XEN_SYSCTL_set_parameter
+    set_parameter
 }
 
 # Classes domain and domain2 consist of operations that a domain performs on
@@ -246,8 +248,8 @@ class domain2
     mem_sharing
 # XEN_DOMCTL_psr_cat_op
     psr_cat_op
-# XEN_DOMCTL_setcorespersocket
-    setcorespersocket
+# XEN_DOMCTL_set_gnttab_limits
+    set_gnttab_limits
 }
 
 # Similar to class domain, but primarily contains domctls related to HVM domains
@@ -441,7 +443,7 @@ class resource
 # checked when adding a resource to a domain when no IOMMU present:
 #  source = domain which will have access to the resource
 #  target = resource's security label
-# Enable this to allow some less secure systems to still work.
+# Enable this to allow resource use without an active IOMMU.
     use_noiommu
 # PHYSDEVOP_map_pirq and ioapic writes for dom0, when acting on real IRQs
 #  For GSI interrupts, the IRQ's label is indexed by the IRQ number
