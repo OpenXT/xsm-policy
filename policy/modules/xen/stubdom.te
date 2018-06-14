@@ -35,14 +35,6 @@ type dom0-stubdom_evchn_t;
 xen_event_type(dom0-stubdom_evchn_t)
 dom0_event_src(stubdom_t, dom0-stubdom_evchn_t)
 
-type stubdom-ndvm_evchn_t;
-xen_event_type(stubdom-ndvm_evchn_t)
-ndvm_event_dst(stubdom_t, stubdom-ndvm_evchn_t)
-
-type ndvm-stubdom_evchn_t;
-xen_event_type(ndvm-stubdom_evchn_t)
-ndvm_event_src(stubdom_t, ndvm-stubdom_evchn_t)
-
 #types for event channel between stubdom and nilfvm
 type nilfvm-stubdom_evchn_t;
 xen_event_type(nilfvm-stubdom_evchn_t)
