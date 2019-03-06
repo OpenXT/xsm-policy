@@ -76,3 +76,5 @@ domio_map_write_mmu(stubdom_t)
 device_add_resource(stubdom_t)
 device_bind_hvm(stubdom_t)
 device_remove_resource(stubdom_t)
+
+hvm_guest_resource_map(stubdom_t)
