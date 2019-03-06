@@ -88,6 +88,7 @@ interface(`stubdom_ioemu',`
 
 	allow stubdom_t $1:resource { add remove };
 	allow stubdom_t $1:domain { getdomaininfo set_target shutdown settime };
+	allow stubdom_t $1:domain2 resource_map;
 	allow stubdom_t $1:hvm { getparam dm setparam hvmctl };
 	allow stubdom_t $1:mmu { adjust physmap map_read map_write };
 	allow stubdom_t $1:grant copy;
