@@ -55,6 +55,7 @@ interface(`xen_domain_type',`
 	allow $1 $1:grant {query setup};
 	allow dom0_type $1:grant { copy map_read unmap query setup };
     allow $1 xen_t:version { xen_extraversion };
+    allow dom0_type $1:domain2 { setclaim };
 ')
 ########################################
 ## <summary>
