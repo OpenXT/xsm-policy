@@ -149,9 +149,11 @@ interface(`stubdom_map_write_grant',`
 
 	allow $1 stubdom_t:grant map_write;
 ')
+
 ########################################
 ## <summary>
-##	Allow the specified type to set stubdom gnttab limits.
+##	Allow the specified domain to access
+##	the stubdom's resource map.
 ## </summary>
 ## <param name="type">
 ##	<summary>
@@ -159,10 +161,10 @@ interface(`stubdom_map_write_grant',`
 ##	</summary>
 ## </param>
 #
-interface(`stubdom_set_gnttab_limits',`
+interface(`stubdom_resource_map',`
 	gen_require(`
 		type stubdom_t;
 	')
 
-	allow $1 stubdom_t:domain2 set_gnttab_limits;
+	allow $1 stubdom_t:domain2 resource_map;
 ')
