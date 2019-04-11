@@ -35,20 +35,3 @@ interface(`hvm_guest_map_write_grant',`
 
 	allow $1 hvm_guest_t:grant map_write;
 ')
-########################################
-## <summary>
-##	Allow the specified type to set hvm_guest gnttab limits.
-## </summary>
-## <param name="type">
-##	<summary>
-##	Type of the domain allowed access.
-##	</summary>
-## </param>
-#
-interface(`hvm_guest_set_gnttab_limits',`
-	gen_require(`
-		type hvm_guest_t;
-	')
-
-	allow $1 hvm_guest_t:domain2 set_gnttab_limits;
-')

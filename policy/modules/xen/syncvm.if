@@ -53,3 +53,22 @@ interface(`syncvm_map_write_grant',`
 
 	allow $1 syncvm_t:grant map_write;
 ')
+
+########################################
+## <summary>
+##	Allow the specified domain to access
+##	the SyncVM's resource map.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`syncvm_resource_map',`
+	gen_require(`
+		type syncvm_t;
+	')
+
+	allow $1 syncvm_t:domain2 resource_map;
+')
