@@ -89,7 +89,7 @@ allow dom0_type xen_t:mmu { memorymap };
 allow dom0_type xen_t:xen { kexec readapic writeapic mtrr_read mtrr_add mtrr_del 
                          getscheduler setscheduler physinfo heap quirk
                          settime microcode firmware sleep getcpuinfo pm_op
-			 cpupool_op };
+			 cpupool_op mca_op };
 allow dom0_type xen_t:version { xen_compile_info xen_capabilities
                                 xen_changeset xen_pagesize
                                 xen_commandline xen_build_id
