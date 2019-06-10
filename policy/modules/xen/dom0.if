@@ -110,7 +110,7 @@ interface(`dom0_copy_grant',`
 ########################################
 ## <summary>
 ##	Allow the specified type to send
-##	data via v4v to dom0
+##	data via argo to dom0
 ## </summary>
 ## <param name="type">
 ##	<summary>
@@ -118,17 +118,17 @@ interface(`dom0_copy_grant',`
 ##	</summary>
 ## </param>
 #
-interface(`dom0_send_v4v',`
+interface(`dom0_send_argo',`
 	gen_require(`
 		type dom0_t;
 	')
 
-	allow $1 self:v4v use;
-	allow $1 dom0_t:v4v send;
+	allow $1 self:argo enable;
+	allow $1 dom0_t:argo send;
 ')
 ########################################
 ## <summary>
-##	Allow dom0 to send data via v4v to
+##	Allow dom0 to send data via argo to
 ##	the specified domain.
 ## </summary>
 ## <param name="type">
@@ -137,13 +137,13 @@ interface(`dom0_send_v4v',`
 ##	</summary>
 ## </param>
 #
-interface(`dom0_recv_v4v',`
+interface(`dom0_recv_argo',`
 	gen_require(`
 		type dom0_t;
 	')
 
-	allow dom0_t self:v4v use;
-	allow dom0_t $1:v4v send;
+	allow dom0_t self:argo enable;
+	allow dom0_t $1:argo send;
 ')
 ########################################
 ## <summary>

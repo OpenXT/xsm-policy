@@ -116,7 +116,7 @@ interface(`stubdom_copy_grant',`
 ########################################
 ## <summary>
 ##	Allow the specified type to send
-##	data via v4v to stubdom
+##	data via argo to stubdom
 ## </summary>
 ## <param name="type">
 ##	<summary>
@@ -124,13 +124,13 @@ interface(`stubdom_copy_grant',`
 ##	</summary>
 ## </param>
 #
-interface(`stubdom_send_v4v',`
+interface(`stubdom_send_argo',`
 	gen_require(`
 		type stubdom_t;
 	')
 
-	allow $1 self:v4v use;
-	allow $1 stubdom_t:v4v send;
+	allow $1 self:argo enable;
+	allow $1 stubdom_t:argo send;
 ')
 ########################################
 ## <summary>

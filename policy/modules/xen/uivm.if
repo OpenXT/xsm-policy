@@ -21,7 +21,7 @@
 ########################################
 ## <summary>
 ##	Allow the specified domain to
-##	send data to the UIVM via v4v.
+##	send data to the UIVM via argo.
 ## </summary>
 ## <param name="type">
 ##	<summary>
@@ -29,13 +29,13 @@
 ##	</summary>
 ## </param>
 #
-interface(`uivm_send_v4v',`
+interface(`uivm_send_argo',`
 	gen_require(`
 		type uivm_t;
 	')
 
-	allow $1 self:v4v use;
-	allow $1 uivm_t:v4v send;
+	allow $1 self:argo enable;
+	allow $1 uivm_t:argo send;
 ')
 
 ########################################

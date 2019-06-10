@@ -55,7 +55,7 @@ allow stubdom_t self:grant copy;
 allow stubdom_t self:resource remove;
 
 dom0_copy_grant(stubdom_t)
-dom0_send_v4v(stubdom_t)
+dom0_send_argo(stubdom_t)
 iomem_map_rw_mmu(stubdom_t)
 ndvm_use(stubdom_t)
 ndvm_copy_grant(stubdom_t)

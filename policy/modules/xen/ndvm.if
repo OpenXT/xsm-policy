@@ -75,7 +75,7 @@ interface(`ndvm_manage_resource',`
 ########################################
 ## <summary>
 ##	Allow the specified domain to
-##	send data to the NDVM via v4v.
+##	send data to the NDVM via argo.
 ## </summary>
 ## <param name="type">
 ##	<summary>
@@ -83,13 +83,13 @@ interface(`ndvm_manage_resource',`
 ##	</summary>
 ## </param>
 #
-interface(`ndvm_send_v4v',`
+interface(`ndvm_send_argo',`
 	gen_require(`
 		type ndvm_t;
 	')
 
-	allow $1 self:v4v use;
-	allow $1 ndvm_t:v4v send;
+	allow $1 self:argo enable;
+	allow $1 ndvm_t:argo send;
 ')
 ########################################
 ## <summary>
