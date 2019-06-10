@@ -76,9 +76,9 @@ nilfvm_use(hvm_guest_t)
 dom0_copy_grant(hvm_guest_t)
 dom0_map_write_grant_guest(hvm_guest_t)
 dom0_pt_guest_iommu_nointremap(hvm_guest_t)
-# Uncomment these if you wish to allow guests to use v4v.
-#dom0_send_v4v(hvm_guest_t)
-#dom0_recv_v4v(hvm_guest_t)
+# Uncomment these if you wish to allow guests to use argo.
+#dom0_send_argo(hvm_guest_t)
+#dom0_recv_argo(hvm_guest_t)
 stubdom_ioemu(hvm_guest_t)
 # The no-stubdom case
 dom0_ioemu(hvm_guest_t)

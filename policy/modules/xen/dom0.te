@@ -45,7 +45,7 @@ allow dom0_t self:domain2 { setscheduler };
 
 allow dom0_t self:event { bind create };
 allow dom0_t self:resource { add remove setup };
-dom0_send_v4v(dom0_t)
+dom0_send_argo(dom0_t)
 
 allow dom0_t evchn0-0_t:event send;
 
@@ -61,12 +61,12 @@ domio_map_rw_mmu(dom0_t)
 
 # dom0 access to service VMs
 ndvm_manage_resource(dom0_t)
-ndvm_send_v4v(dom0_t)
+ndvm_send_argo(dom0_t)
 ndvm_use(dom0_t)
 ndvm_map_write_grant(dom0_t)
 ndvm_resource_map(dom0_t)
 
-uivm_send_v4v(dom0_t)
+uivm_send_argo(dom0_t)
 uivm_map_write_grant(dom0_t)
 uivm_resource_map(dom0_t)
 
@@ -80,7 +80,7 @@ nilfvm_map_write_grant(dom0_t)
 nilfvm_resource_map(dom0_t)
 
 stubdom_copy_grant(dom0_t)
-stubdom_send_v4v(dom0_t)
+stubdom_send_argo(dom0_t)
 stubdom_map_write_grant(dom0_t)
 stubdom_resource_map(dom0_t)
 
