@@ -197,9 +197,11 @@ interface(`ndvm_copy_grant',`
 
 	allow $1 ndvm_t:grant copy;
 ')
+
 ########################################
 ## <summary>
-##	Allow the specified type to set ndvm gnttab limits.
+##	Allow the specified domain to access
+##	the NDVM's resource map.
 ## </summary>
 ## <param name="type">
 ##	<summary>
@@ -207,10 +209,10 @@ interface(`ndvm_copy_grant',`
 ##	</summary>
 ## </param>
 #
-interface(`ndvm_set_gnttab_limits',`
+interface(`ndvm_resource_map',`
 	gen_require(`
 		type ndvm_t;
 	')
 
-	allow $1 ndvm_t:domain2 set_gnttab_limits;
+	allow $1 ndvm_t:domain2 resource_map;
 ')

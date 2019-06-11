@@ -55,9 +55,11 @@ interface(`uivm_map_write_grant',`
 
 	allow $1 uivm_t:grant map_write;
 ')
+
 ########################################
 ## <summary>
-##	Allow the specified type to set uivm gnttab limits.
+##	Allow the specified domain to access
+##	the UIVM's resource map.
 ## </summary>
 ## <param name="type">
 ##	<summary>
@@ -65,10 +67,10 @@ interface(`uivm_map_write_grant',`
 ##	</summary>
 ## </param>
 #
-interface(`uivm_set_gnttab_limits',`
+interface(`uivm_resource_map',`
 	gen_require(`
 		type uivm_t;
 	')
 
-	allow $1 uivm_t:domain2 set_gnttab_limits;
+	allow $1 uivm_t:domain2 resource_map;
 ')
