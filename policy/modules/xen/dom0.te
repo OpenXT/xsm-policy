@@ -58,6 +58,11 @@ allow dom0_t xen_t:xen mca_op;
 allow dom0_t xen_t:xen2 get_cpu_featureset;
 
 domio_map_rw_mmu(dom0_t)
+argo_register_any_source(dom0_t)
+uivm_argo_register_single_source(dom0_t)
+ndvm_argo_register_single_source(dom0_t)
+stubdom_argo_register_single_source(dom0_t)
+argo_enable(dom0_t)
 
 # dom0 access to service VMs
 ndvm_manage_resource(dom0_t)

@@ -82,3 +82,4 @@ dom0_pt_guest_iommu_nointremap(hvm_guest_t)
 stubdom_ioemu(hvm_guest_t)
 # The no-stubdom case
 dom0_ioemu(hvm_guest_t)
+argo_enable(hvm_guest_t)

@@ -61,6 +61,9 @@ ndvm_use(stubdom_t)
 ndvm_copy_grant(stubdom_t)
 nilfvm_use(stubdom_t)
 xen_write_console(stubdom_t)
+argo_register_any_source(stubdom_t)
+dom0_argo_register_single_source(stubdom_t)
+argo_enable(stubdom_t)
 
 # pci pass through
 iomem_add_resource(stubdom_t)

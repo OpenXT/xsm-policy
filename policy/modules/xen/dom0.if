@@ -109,6 +109,26 @@ interface(`dom0_copy_grant',`
 ')
 ########################################
 ## <summary>
+##  Allow the specified domain to
+##  register an argo ring with Xen
+##  that can receive a msg only from
+##  dom0.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`dom0_argo_register_single_source',`
+	gen_require(`
+		type dom0_t;
+	')
+
+	allow $1 dom0_t:argo register_single_source;
+')
+########################################
+## <summary>
 ##	Allow the specified type to send
 ##	data via argo to dom0
 ## </summary>
