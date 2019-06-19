@@ -1049,3 +1049,41 @@ interface(`xen_event_type',`
 
 	typeattribute $1 event_type;
 ')
+########################################
+## <summary>
+##  Allow the specified domain to
+##  register an argo ring with Xen
+##  that can receive a msg from any
+##  other domain.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`argo_register_any_source',`
+	gen_require(`
+		type xen_t;
+	')
+
+	allow $1 xen_t:argo register_any_source;
+')
+########################################
+## <summary>
+##  Allow the specified domain to
+##  enable argo.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`argo_enable',`
+	gen_require(`
+		type xen_t;
+	')
+
+	allow $1 xen_t:argo enable;
+')

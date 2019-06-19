@@ -547,9 +547,3 @@ class argo
     # Domain sending a message to another domain.
     send
 }
-
-class v4v
-{
-    send
-    use
-}
