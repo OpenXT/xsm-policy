@@ -50,8 +50,8 @@ ndvm_event_src(nilfvm_t, ndvm-nilfvm_evchn_t)
 #
 
 dom0_copy_grant(nilfvm_t)
-dom0_recv_v4v(nilfvm_t)
-dom0_send_v4v(nilfvm_t)
+dom0_recv_argo(nilfvm_t)
+dom0_send_argo(nilfvm_t)
 ndvm_use(nilfvm_t)
 ndvm_copy_grant(nilfvm_t)
 stubdom_map_write_grant(nilfvm_t)
