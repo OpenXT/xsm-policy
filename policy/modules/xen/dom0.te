@@ -78,9 +78,6 @@ uivm_resource_map(dom0_t)
 syncvm_map_write_grant(dom0_t)
 syncvm_resource_map(dom0_t)
 
-icavm_map_write_grant(dom0_t)
-icavm_resource_map(dom0_t)
-
 nilfvm_map_write_grant(dom0_t)
 nilfvm_resource_map(dom0_t)
 
