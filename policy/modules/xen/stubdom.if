@@ -115,45 +115,6 @@ interface(`stubdom_copy_grant',`
 ')
 ########################################
 ## <summary>
-##  Allow the specified domain to
-##  register an argo ring with Xen
-##  that can receive a msg only from
-##  the stubdom.
-## </summary>
-## <param name="type">
-##	<summary>
-##	Type of the domain allowed access.
-##	</summary>
-## </param>
-#
-interface(`stubdom_argo_register_single_source',`
-	gen_require(`
-		type stubdom_t;
-	')
-
-	allow $1 stubdom_t:argo register_single_source;
-')
-########################################
-## <summary>
-##	Allow the specified type to send
-##	data via argo to stubdom
-## </summary>
-## <param name="type">
-##	<summary>
-##	Type of the domain allowed access.
-##	</summary>
-## </param>
-#
-interface(`stubdom_send_argo',`
-	gen_require(`
-		type stubdom_t;
-	')
-
-	allow $1 self:argo enable;
-	allow $1 stubdom_t:argo send;
-')
-########################################
-## <summary>
 ##	Allow the specified type to map write stubdomain grants.
 ## </summary>
 ## <param name="type">
