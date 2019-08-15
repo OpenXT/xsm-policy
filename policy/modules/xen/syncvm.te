@@ -50,6 +50,6 @@ ndvm_event_src(syncvm_t, ndvm-syncvm_evchn_t)
 
 ndvm_use(syncvm_t)
 ndvm_copy_grant(syncvm_t)
-dom0_recv_argo(syncvm_t)
-dom0_send_argo(syncvm_t)
 xen_write_console(syncvm_t)
+
+argo_comms(syncvm_t, dom0_t)
