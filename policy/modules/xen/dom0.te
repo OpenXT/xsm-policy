@@ -59,7 +59,6 @@ allow dom0_t xen_t:xen2 get_cpu_featureset;
 
 domio_map_rw_mmu(dom0_t)
 argo_register_any_source(dom0_t)
-stubdom_argo_register_single_source(dom0_t)
 argo_enable(dom0_t)
 
 # dom0 access to service VMs
@@ -78,7 +77,6 @@ nilfvm_map_write_grant(dom0_t)
 nilfvm_resource_map(dom0_t)
 
 stubdom_copy_grant(dom0_t)
-stubdom_send_argo(dom0_t)
 stubdom_map_write_grant(dom0_t)
 stubdom_resource_map(dom0_t)
 
