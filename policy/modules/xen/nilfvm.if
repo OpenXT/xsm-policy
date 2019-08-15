@@ -126,22 +126,3 @@ interface(`nilfvm_copy_grant',`
 
 	allow $1 nilfvm_t:grant copy;
 ')
-
-########################################
-## <summary>
-##	Allow the specified domain to access
-##	the nilfvm's resource map.
-## </summary>
-## <param name="type">
-##	<summary>
-##	Type of the domain allowed access.
-##	</summary>
-## </param>
-#
-interface(`nilfvm_resource_map',`
-	gen_require(`
-		type nilfvm_t;
-	')
-
-	allow $1 nilfvm_t:domain2 resource_map;
-')

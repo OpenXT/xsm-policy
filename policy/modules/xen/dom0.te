@@ -51,7 +51,6 @@ allow dom0_t evchn0-0_t:event send;
 
 allow dom0_t iomem_t:resource setup;
 allow dom0_t stubdom_t:domain2 make_priv_for;
-allow dom0_t hvm_guest_t:domain2 resource_map;
 
 allow dom0_t xen_t:resource setup;
 allow dom0_t xen_t:xen mca_op;
@@ -69,25 +68,20 @@ ndvm_manage_resource(dom0_t)
 ndvm_send_argo(dom0_t)
 ndvm_use(dom0_t)
 ndvm_map_write_grant(dom0_t)
-ndvm_resource_map(dom0_t)
 
 uivm_send_argo(dom0_t)
 uivm_map_write_grant(dom0_t)
-uivm_resource_map(dom0_t)
 
 syncvm_map_write_grant(dom0_t)
-syncvm_resource_map(dom0_t)
 
 icavm_map_write_grant(dom0_t)
 icavm_resource_map(dom0_t)
 
 nilfvm_map_write_grant(dom0_t)
-nilfvm_resource_map(dom0_t)
 
 stubdom_copy_grant(dom0_t)
 stubdom_send_argo(dom0_t)
 stubdom_map_write_grant(dom0_t)
-stubdom_resource_map(dom0_t)
 
 # access to hardware & xen
 device_admin_device(dom0_t)

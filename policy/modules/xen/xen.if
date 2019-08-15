@@ -44,8 +44,9 @@ interface(`xen_domain_type',`
 				setaffinity getaffinity settime
 				setdomainhandle shutdown set_misc_info trigger};
 	#allow dom0_type $1:domain2 {setcorespersocket};
-	allow dom0_type $1:domain2 {setscheduler set_cpuid set_as_target settsc};
-			
+	allow dom0_type $1:domain2 { resource_map setscheduler set_cpuid
+				set_as_target settsc};
+
 	allow dom0_type $1:shadow {enable};
 	allow dom0_type $1:mmu {map_read map_write memorymap adjust pinpage physmap mmuext_op stat };
 	allow dom0_type $1:resource { add remove };
