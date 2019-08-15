@@ -1087,3 +1087,32 @@ interface(`argo_enable',`
 
 	allow $1 xen_t:argo enable;
 ')
+########################################
+## <summary>
+##  Allow the specified domains to
+##  communicate over argo.
+## </summary>
+## <param name="type">
+##	<summary>
+##	Type of the first domain allowed comms.
+##	</summary>
+## </param>
+## <param name="type">
+##	<summary>
+##	Type of the second domain allowed comms.
+##	</summary>
+## </param>
+#
+interface(`argo_comms',`
+	gen_require(`
+		type $1;
+		type $2;
+	')
+
+	argo_enable($1)
+	argo_enable($2)
+	allow $1 $2:argo send;
+	allow $2 $1:argo send;
+	allow $1 $2:argo register_single_source;
+	allow $2 $1:argo register_single_source;
+')
