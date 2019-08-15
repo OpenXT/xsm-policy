@@ -59,7 +59,6 @@ allow dom0_t xen_t:xen2 get_cpu_featureset;
 
 domio_map_rw_mmu(dom0_t)
 argo_register_any_source(dom0_t)
-uivm_argo_register_single_source(dom0_t)
 stubdom_argo_register_single_source(dom0_t)
 argo_enable(dom0_t)
 
@@ -69,7 +68,6 @@ ndvm_use(dom0_t)
 ndvm_map_write_grant(dom0_t)
 ndvm_resource_map(dom0_t)
 
-uivm_send_argo(dom0_t)
 uivm_map_write_grant(dom0_t)
 uivm_resource_map(dom0_t)
 
