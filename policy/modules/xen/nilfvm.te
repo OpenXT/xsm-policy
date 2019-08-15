@@ -50,10 +50,10 @@ ndvm_event_src(nilfvm_t, ndvm-nilfvm_evchn_t)
 #
 
 dom0_copy_grant(nilfvm_t)
-dom0_recv_argo(nilfvm_t)
-dom0_send_argo(nilfvm_t)
 ndvm_use(nilfvm_t)
 ndvm_copy_grant(nilfvm_t)
 stubdom_map_write_grant(nilfvm_t)
 hvm_guest_map_write_grant(nilfvm_t)
 xen_write_console(nilfvm_t)
+
+argo_comms(nilfvm_t, dom0_t)
