@@ -51,7 +51,6 @@ stubdom_event_src(ndvm_t, stubdom-ndvm_evchn_t)
 #
 
 dom0_pt_guest_iommu_nointremap(ndvm_t)
-dom0_send_argo(ndvm_t)
 domio_map_write_mmu(ndvm_t)
 ioport_use_resource_iommu_nointremap(ndvm_t)
 iomem_map_rw_mmu(ndvm_t)
@@ -67,5 +66,6 @@ hvm_guest_map_write_grant(ndvm_t)
 stubdom_map_write_grant(ndvm_t)
 syncvm_map_write_grant(ndvm_t)
 nilfvm_map_write_grant(ndvm_t)
+# dbusbouncer registers a wildcard ring
 argo_register_any_source(ndvm_t)
-argo_enable(ndvm_t)
+argo_comms(ndvm_t, dom0_t)
