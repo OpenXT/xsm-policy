@@ -74,45 +74,6 @@ interface(`ndvm_manage_resource',`
 ')
 ########################################
 ## <summary>
-##  Allow the specified domain to
-##  register an argo ring with Xen
-##  that can receive a msg only from
-##  the ndvm.
-## </summary>
-## <param name="type">
-##	<summary>
-##	Type of the domain allowed access.
-##	</summary>
-## </param>
-#
-interface(`ndvm_argo_register_single_source',`
-	gen_require(`
-		type ndvm_t;
-	')
-
-	allow $1 ndvm_t:argo register_single_source;
-')
-########################################
-## <summary>
-##	Allow the specified domain to
-##	send data to the NDVM via argo.
-## </summary>
-## <param name="type">
-##	<summary>
-##	Type of the domain allowe access.
-##	</summary>
-## </param>
-#
-interface(`ndvm_send_argo',`
-	gen_require(`
-		type ndvm_t;
-	')
-
-	allow $1 self:argo enable;
-	allow $1 ndvm_t:argo send;
-')
-########################################
-## <summary>
 ##	Allow the specified domain to
 ##	create a private event type
 ##	for use with ndvm.
