@@ -45,7 +45,6 @@ allow dom0_t self:domain2 { setscheduler };
 
 allow dom0_t self:event { bind create };
 allow dom0_t self:resource { add remove setup };
-dom0_send_argo(dom0_t)
 
 allow dom0_t evchn0-0_t:event send;
 
@@ -57,8 +56,9 @@ allow dom0_t xen_t:xen mca_op;
 allow dom0_t xen_t:xen2 get_cpu_featureset;
 
 domio_map_rw_mmu(dom0_t)
+
+argo_comms(dom0_t, dom0_t)
 argo_register_any_source(dom0_t)
-argo_enable(dom0_t)
 
 # dom0 access to service VMs
 ndvm_manage_resource(dom0_t)
