@@ -26,6 +26,7 @@ policy_module(syncvm, 0.2)
 type syncvm_t;
 xen_domain_type(syncvm_t)
 xen_pv_type(syncvm_t)
+xen_hvm_type(syncvm_t)
 
 type syncvm-dom0_evchn_t;
 xen_event_type(syncvm-dom0_evchn_t)
