@@ -24,6 +24,7 @@ policy_module(stubdom, 0.2)
 #
 
 type stubdom_t;
+typealias stubdom_t alias { dm_ndvm_t dm_usbvm_t };
 xen_domain_type(stubdom_t)
 xen_pv_type(stubdom_t)
 
