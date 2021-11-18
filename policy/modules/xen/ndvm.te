@@ -51,6 +51,7 @@ stubdom_event_src(ndvm_t, stubdom-ndvm_evchn_t)
 # Local Policy
 #
 
+dom0_ioemu(ndvm_t)
 dom0_pt_guest_iommu_nointremap(ndvm_t)
 domio_map_write_mmu(ndvm_t)
 ioport_use_resource_iommu_nointremap(ndvm_t)
