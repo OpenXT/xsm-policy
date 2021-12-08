@@ -27,6 +27,8 @@ type hvm_guest_t;
 xen_domain_type(hvm_guest_t)
 xen_hvm_type(hvm_guest_t)
 
+allow hvm_guest_t self:hvm { hvmctl };
+
 #types for event channel between hvm_guest and dom0
 type hvm_guest-dom0_evchn_t;
 xen_event_type(hvm_guest-dom0_evchn_t)
