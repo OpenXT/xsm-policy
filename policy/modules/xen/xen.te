@@ -96,7 +96,7 @@ allow dom0_type xen_t:version { xen_compile_info xen_capabilities
                                 xen_extraversion };
 
 # dom0 access to hvm guests
-allow dom0_type hvm_type:hvm { getparam nested setparam hvmctl
+allow dom0_type hvm_type:hvm { getparam setparam hvmctl
                                altp2mhvm gethvmc sethvmc };
 
 ########################################
