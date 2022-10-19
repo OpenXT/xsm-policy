@@ -24,6 +24,7 @@ policy_module(stubdom, 0.2)
 #
 
 type stubdom_t;
+typealias stubdom_t alias { dm_ndvm_t dm_usbvm_t };
 xen_domain_type(stubdom_t)
 xen_pv_type(stubdom_t)
 
@@ -71,6 +72,7 @@ ioport_remove_resource(stubdom_t)
 ioport_use_resource_noiommu(stubdom_t)
 pirq_add_resource(stubdom_t)
 pirq_bind_hvm(stubdom_t)
+pirq_remove_resource(stubdom_t)
 pirq_use_resource_noiommu(stubdom_t)
 domio_map_write_mmu(stubdom_t)
 device_add_resource(stubdom_t)
