@@ -29,6 +29,7 @@ attribute event_type;
 attribute hvm_type;
 attribute dom0_type;
 
+type xenboot_t, xen_type;
 type xen_t, xen_type;
 type domio_t, domain_type;
 type domU_t, domain_type;
@@ -40,6 +41,7 @@ type ioport_t, resource_type;
 type iomem_t, resource_type;
 type device_t, resource_type;
 
+sid xenboot gen_context(system_u:system_r:xenboot_t,s0)
 sid xen gen_context(system_u:system_r:xen_t,s0)
 sid domxen gen_context(system_u:system_r:domxen_t,s0)
 sid domio gen_context(system_u:system_r:domio_t,s0)

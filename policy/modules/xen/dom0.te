@@ -83,3 +83,5 @@ pirq_admin_device(dom0_t)
 #pirq_vector_event(dom0_t)
 security_ssid_convert(dom0_t)
 xen_rw_console(dom0_t)
+
+xen_build_domain(dom0_t, evchn0-0_t)

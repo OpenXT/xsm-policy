@@ -18,6 +18,18 @@
 
 # <summary>Xen XSM module</summary>
 
+
+# xen_build_domain(target)
+#   Allow a domain to be created at boot by the hypervisor
+interface(`xen_build_domain', `
+    gen_require(`
+        type xenboot_t;
+    ')
+
+    allow xenboot_t $1:domain create;
+    allow xenboot_t $2:event create;
+')
+
 ########################################
 ## <summary>
 ##	Make the specified type usable
@@ -42,7 +54,8 @@ interface(`xen_domain_type',`
 				setvcpucontext getscheduler pause unpause 
 				getvcpuinfo getaddrsize
 				setaffinity getaffinity settime
-				setdomainhandle shutdown set_misc_info trigger};
+				setdomainhandle shutdown set_misc_info trigger
+				getpagingmempool setpagingmempool };
 	#allow dom0_type $1:domain2 {setcorespersocket};
 	allow dom0_type $1:domain2 { resource_map setscheduler set_cpu_policy
 				set_as_target settsc};
