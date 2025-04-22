@@ -99,6 +99,8 @@ class xen2
     livepatch_op
 # XEN_SYSCTL_coverage_op
     coverage_op
+# XENPF_get_dom0_console
+    get_dom0_console
 }
 
 # Classes domain and domain2 consist of operations that a domain performs on
@@ -249,6 +251,8 @@ class domain2
     resource_map
 # XEN_DOMCTL_get_cpu_policy
     get_cpu_policy
+# XEN_DOMCTL_vuart_op
+    vuart_op
 }
 
 # Similar to class domain, but primarily contains domctls related to HVM domains

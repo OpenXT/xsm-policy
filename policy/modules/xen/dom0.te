@@ -54,6 +54,7 @@ allow dom0_t stubdom_t:domain2 make_priv_for;
 allow dom0_t xen_t:resource setup;
 allow dom0_t xen_t:xen mca_op;
 allow dom0_t xen_t:xen2 get_cpu_featureset;
+allow dom0_t xen_t:xen2 get_dom0_console;
 
 domio_map_rw_mmu(dom0_t)
 
