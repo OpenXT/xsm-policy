@@ -49,6 +49,7 @@ interface(`xen_domain_type',`
 
 	typeattribute $1 domain_type;
 
+	allow dom0_type domxen_t:domain getdomaininfo;
 	allow dom0_type $1:domain {create destroy max_vcpus setdomainmaxmem 
 				setaddrsize getdomaininfo hypercall 
 				setvcpucontext getscheduler pause unpause 
@@ -57,6 +58,7 @@ interface(`xen_domain_type',`
 				setdomainhandle shutdown set_misc_info trigger
 				getpagingmempool setpagingmempool };
 	#allow dom0_type $1:domain2 {setcorespersocket};
+	allow dom0_type domxen_t:domain2 get_domain_state;
 	allow dom0_type $1:domain2 { resource_map setscheduler set_cpu_policy
 				set_as_target settsc vuart_op get_domain_state};
 
